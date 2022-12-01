@@ -9,12 +9,11 @@ let folder (head :: tail) line =
         (int line + head) :: tail
 
 let part1 input =
-    input |> File.ReadAllLines |> Seq.toList |> Seq.fold folder [ 0 ] |> Seq.max
+    input |> File.ReadAllLines |> Seq.fold folder [ 0 ] |> Seq.max
 
 let part2 input =
     input
     |> File.ReadAllLines
-    |> Seq.toList
     |> Seq.fold folder [ 0 ]
     |> Seq.sort
     |> Seq.rev
