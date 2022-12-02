@@ -36,12 +36,12 @@ type Play =
     | Paper
     | Scissors
 
+let plays = [ Rock; Scissors; Paper ]
+
+type Play with
+
     member this.beats p =
-        match (this, p) with
-        | (Rock, Scissors)
-        | (Paper, Rock)
-        | (Scissors, Paper) -> true
-        | _ -> false
+        if U.next plays this = p then true else false
 
 let points =
     function
@@ -84,13 +84,11 @@ Following the Elf's instructions for the second column, what would your total sc
 
 *)
 
-let plays = [ Rock; Paper; Scissors ]
-
 let actionToPlay p =
     function
-    | 'X' -> p |> U.next plays |> U.next plays
+    | 'X' -> p |> U.next plays
     | 'Y' -> p
-    | 'Z' -> p |> U.next plays
+    | 'Z' -> p |> U.next plays |> U.next plays
 
 let toPlays2 (a, b) = toPlay a, actionToPlay (toPlay a) b
 
@@ -98,7 +96,7 @@ let part2 input =
     input |> Seq.map (toTup >> toPlays2 >> score) |> Seq.sum
 
 type Solution(input: string seq) =
-    inherit Utility.Solution(input)
+    inherit U.Solution(input)
     let input = input
     override this.Part1 = part1 input |> string
     override this.Part2 = part2 input |> string
