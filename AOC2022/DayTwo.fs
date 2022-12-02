@@ -29,7 +29,7 @@ What would your total score be if everything goes exactly according to your stra
 
 module Day2
 
-open Utility
+module U = Utility
 
 type Play =
     | Rock
@@ -64,8 +64,8 @@ let score: ((Play * Play) -> int) =
     | (a, b) when a = b -> 3 + points b
     | (_, b) -> points b
 
-let part1 (input: string seq) =
-    input |> Seq.map (toTup >> (spread toPlay) >> score) |> Seq.sum
+let part1 input =
+    input |> Seq.map (U.toTup >> (U.spread toPlay) >> score) |> Seq.sum
 
 (*
     --- Part Two ---
@@ -86,14 +86,14 @@ let plays = [ Rock; Paper; Scissors ]
 
 let actionToPlay p =
     function
-    | 'X' -> wrappedNext (wrappedNext p plays) plays
+    | 'X' -> p |> U.next plays |> U.next plays
     | 'Y' -> p
-    | 'Z' -> wrappedNext p plays
+    | 'Z' -> p |> U.next plays
 
 let toPlays2 (a, b) = toPlay a, actionToPlay (toPlay a) b
 
 let part2 input =
-    input |> Seq.map (toTup >> toPlays2 >> score) |> Seq.sum
+    input |> Seq.map (U.toTup >> toPlays2 >> score) |> Seq.sum
 
 type Solution(input: string seq) =
     inherit Utility.Solution(input)

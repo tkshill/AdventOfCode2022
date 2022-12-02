@@ -24,7 +24,7 @@ let spread f (a, b) = (f a, f b)
 
 let toTup line = (Seq.head line, Seq.last line)
 
-let wrappedNext value s =
+let next s value =
     let index = Seq.findIndex (fun v -> v = value) s
 
     if index = Seq.length s - 1 then
