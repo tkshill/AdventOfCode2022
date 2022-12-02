@@ -58,6 +58,8 @@ let toPlay =
     | 'C'
     | 'Z' -> Scissors
 
+let toTup line = (Seq.head line, Seq.last line)
+
 let score: ((Play * Play) -> int) =
     function
     | (a, b) when b.beats a -> 6 + points b
@@ -65,7 +67,7 @@ let score: ((Play * Play) -> int) =
     | (_, b) -> points b
 
 let part1 input =
-    input |> Seq.map (U.toTup >> (U.spread toPlay) >> score) |> Seq.sum
+    input |> Seq.map (toTup >> (U.spread toPlay) >> score) |> Seq.sum
 
 (*
     --- Part Two ---
@@ -93,7 +95,7 @@ let actionToPlay p =
 let toPlays2 (a, b) = toPlay a, actionToPlay (toPlay a) b
 
 let part2 input =
-    input |> Seq.map (U.toTup >> toPlays2 >> score) |> Seq.sum
+    input |> Seq.map (toTup >> toPlays2 >> score) |> Seq.sum
 
 type Solution(input: string seq) =
     inherit Utility.Solution(input)

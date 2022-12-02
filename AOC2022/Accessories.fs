@@ -22,8 +22,6 @@ let flip f a b = f b a
 
 let spread f (a, b) = (f a, f b)
 
-let toTup line = (Seq.head line, Seq.last line)
-
 let next s value =
     let index = Seq.findIndex (fun v -> v = value) s
 
