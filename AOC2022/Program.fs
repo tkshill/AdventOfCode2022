@@ -1,22 +1,13 @@
 ﻿open System.IO
 open System.Net.Http
+open Utility
 
-type MaybeBuilder() =
-    member this.Bind(x, f) =
-        match x with
-        | Some x -> f x
-        | _ -> None
+let getSolution (input: string seq) : string -> Solution option =
+    function
+    | "1" -> Some(Day1.Solution input)
+    | "2" -> Some(Day2.Solution input)
+    | _ -> None
 
-    member this.Delay(f) = f ()
-    member this.Return(x) = Some x
-    member this.ReturnFrom(m) = m
-    member this.Zero() = None
-
-let maybe = new MaybeBuilder()
-
-let flip f a b = f b a
-
-let days = Map [ ("1", Day1.Solution) ]
 
 let getData input =
     let fileName = $"./day{input}.txt"
@@ -44,19 +35,16 @@ let getData input =
 let main args =
     maybe {
         let! day = Seq.tryHead args
-
-        let part = Seq.tryItem 1 args
+        let! part = Seq.tryItem 1 args
         let! input = getData day
-        let! solution = Map.tryFind day days
-
-        let result = solution input
+        let! solution = getSolution input day
 
         match part with
-        | Some "1" -> printfn "%A" result.Part1
-        | Some "2" -> printfn "%A" result.Part2
+        | "1" -> printfn "%A" solution.Part1
+        | "2" -> printfn "%A" solution.Part2
         | _ ->
-            printfn "%A" result.Part1
-            printfn "%A" result.Part2
+            printfn "%A" solution.Part1
+            printfn "%A" solution.Part2
     }
     |> ignore
 
