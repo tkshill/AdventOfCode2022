@@ -20,7 +20,7 @@ let maybe = new MaybeBuilder()
 
 let flip f a b = f b a
 
-let spread f (a, b) = (f a, f b)
+let mapTuple f (a, b) = (f a, f b)
 
 let next s value =
     let index = Seq.findIndex (fun v -> v = value) s
@@ -30,4 +30,4 @@ let next s value =
     else
         Seq.item (index + 1) s
 
-let toTup line = (Seq.head line, Seq.last line)
+let startAndEndtoTuple line = (Seq.head line, Seq.last line)

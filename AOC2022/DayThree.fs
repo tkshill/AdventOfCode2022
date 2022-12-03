@@ -43,9 +43,9 @@ let offset =
 
 let calculate =
     Seq.splitInto 2
-    >> U.toTup
-    >> U.spread set
-    >> (fun (s, s2) -> Set.intersect s s2)
+    >> U.startAndEndtoTuple
+    >> U.mapTuple set
+    >> (fun (left, right) -> Set.intersect left right)
     >> Seq.head
     >> int
     >> offset

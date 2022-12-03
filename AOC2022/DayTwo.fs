@@ -65,7 +65,9 @@ let score: ((Play * Play) -> int) =
     | (_, b) -> points b
 
 let part1 input =
-    input |> Seq.map (U.toTup >> (U.spread toPlay) >> score) |> Seq.sum
+    input
+    |> Seq.map (U.startAndEndtoTuple >> (U.mapTuple toPlay) >> score)
+    |> Seq.sum
 
 (*
     --- Part Two ---
@@ -91,7 +93,7 @@ let actionToPlay p =
 let toPlays2 (a, b) = toPlay a, actionToPlay (toPlay a) b
 
 let part2 input =
-    input |> Seq.map (U.toTup >> toPlays2 >> score) |> Seq.sum
+    input |> Seq.map (U.startAndEndtoTuple >> toPlays2 >> score) |> Seq.sum
 
 type Solution(input: string seq) =
     inherit U.Solution(input)
