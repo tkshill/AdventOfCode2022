@@ -6,6 +6,7 @@ let getSolution (input: string seq) : string -> Solution option =
     function
     | "1" -> Some(Day1.Solution input)
     | "2" -> Some(Day2.Solution input)
+    | "3" -> Some(Day3.Solution input)
     | _ -> None
 
 

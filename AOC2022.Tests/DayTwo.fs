@@ -3,12 +3,6 @@ module DayTwoTests
 open System.IO
 open Xunit
 
-
-
-// [<Fact>]
-// let ``Input is successfully parsed`` () =
-//     Assert.Equal(())
-
 let solution = File.ReadAllLines "day2test.txt" |> fun data -> Day2.Solution data
 
 [<Fact>]

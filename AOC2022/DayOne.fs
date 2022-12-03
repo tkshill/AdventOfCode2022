@@ -41,7 +41,7 @@
 
 module Day1
 
-open Utility
+module U = Utility
 
 let folder (head :: tail) line =
     if line = "" then
@@ -66,7 +66,7 @@ let part2 input =
     input |> Seq.fold folder [ 0 ] |> Seq.sort |> Seq.rev |> Seq.take 3 |> Seq.sum
 
 type Solution(input: string seq) =
-    inherit Utility.Solution(input)
+    inherit U.Solution(input)
     let input = input
     override this.Part1 = part1 input |> string
     override this.Part2 = part2 input |> string

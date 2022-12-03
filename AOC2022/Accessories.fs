@@ -29,3 +29,5 @@ let next s value =
         Seq.head s
     else
         Seq.item (index + 1) s
+
+let toTup line = (Seq.head line, Seq.last line)
