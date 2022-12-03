@@ -42,13 +42,7 @@ let offset =
     | x -> x - 38
 
 let calculate =
-    Seq.splitInto 2
-    >> U.startAndEndtoTuple
-    >> U.mapTuple set
-    >> (fun (left, right) -> Set.intersect left right)
-    >> Seq.head
-    >> int
-    >> offset
+    Seq.splitInto 2 >> Seq.map set >> Set.intersectMany >> Seq.head >> int >> offset
 
 let part1 = Seq.map calculate >> Seq.sum
 
