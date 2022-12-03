@@ -41,10 +41,9 @@ let offset =
     | x when x > 96 -> x - 96
     | x -> x - 38
 
-let calculate =
-    Seq.splitInto 2 >> Seq.map set >> Set.intersectMany >> Seq.head >> int >> offset
+let calculate = Set.intersectMany >> Seq.head >> int >> offset
 
-let part1 = Seq.map calculate >> Seq.sum
+let part1 = Seq.map (Seq.splitInto 2 >> Seq.map set >> calculate) >> Seq.sum
 
 (*
     --- Part Two ---
@@ -73,9 +72,7 @@ Priorities for these items must still be found to organize the sticker attachmen
 Find the item type that corresponds to the badges of each three-Elf group. What is the sum of the priorities of those item types?
 *)
 
-let calculate2 = Seq.map set >> Set.intersectMany >> Seq.head >> int >> offset
-
-let part2 = Seq.chunkBySize 3 >> Seq.map calculate2 >> Seq.sum
+let part2 = Seq.chunkBySize 3 >> Seq.map (Seq.map set >> calculate) >> Seq.sum
 
 type Solution(input: string seq) =
     inherit U.Solution(input)
