@@ -29,7 +29,7 @@ What would your total score be if everything goes exactly according to your stra
 
 module Day2
 
-module U = Utility
+open Utility
 
 type Play =
     | Rock
@@ -41,7 +41,7 @@ let plays = [ Rock; Scissors; Paper ]
 type Play with
 
     member this.beats p =
-        if U.next plays this = p then true else false
+        if next plays this = p then true else false
 
 let points =
     function
@@ -65,9 +65,7 @@ let score: ((Play * Play) -> int) =
     | (_, b) -> points b
 
 let part1 input =
-    input
-    |> Seq.map (U.startAndEndtoTuple >> (U.mapTuple toPlay) >> score)
-    |> Seq.sum
+    input |> Seq.map (endsToTuple >> (tupleMap toPlay) >> score) |> Seq.sum
 
 (*
     --- Part Two ---
@@ -86,17 +84,17 @@ Following the Elf's instructions for the second column, what would your total sc
 
 let actionToPlay p =
     function
-    | 'X' -> p |> U.next plays
+    | 'X' -> p |> next plays
     | 'Y' -> p
-    | 'Z' -> p |> U.next plays |> U.next plays
+    | 'Z' -> p |> next plays |> next plays
 
 let toPlays2 (a, b) = toPlay a, actionToPlay (toPlay a) b
 
 let part2 input =
-    input |> Seq.map (U.startAndEndtoTuple >> toPlays2 >> score) |> Seq.sum
+    input |> Seq.map (endsToTuple >> toPlays2 >> score) |> Seq.sum
 
 type Solution(input: string seq) =
-    inherit U.Solution(input)
+    inherit Utility.Solution(input)
     let input = input
     override this.Part1 = part1 input |> string
     override this.Part2 = part2 input |> string

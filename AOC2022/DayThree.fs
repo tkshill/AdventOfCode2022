@@ -34,8 +34,6 @@ Find the item type that appears in both compartments of each rucksack. What is t
 
 module Day3
 
-module U = Utility
-
 let offset =
     function
     | x when x > 96 -> x - 96
@@ -75,7 +73,7 @@ Find the item type that corresponds to the badges of each three-Elf group. What 
 let part2 = Seq.chunkBySize 3 >> Seq.map (Seq.map set >> calculate) >> Seq.sum
 
 type Solution(input: string seq) =
-    inherit U.Solution(input)
+    inherit Utility.Solution(input)
     let input = input
     override this.Part1 = part1 input |> string
     override this.Part2 = part2 input |> string

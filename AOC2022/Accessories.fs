@@ -1,5 +1,9 @@
 module Utility
 
+type SolutionResult<'T when 'T :> System.IComparable> =
+    class
+    end
+
 [<AbstractClass>]
 type Solution(input: string seq) =
     abstract member Part1: string
@@ -20,7 +24,7 @@ let maybe = new MaybeBuilder()
 
 let flip f a b = f b a
 
-let mapTuple f (a, b) = (f a, f b)
+let tupleMap f (a, b) = (f a, f b)
 
 let next s value =
     let index = Seq.findIndex (fun v -> v = value) s
@@ -30,4 +34,6 @@ let next s value =
     else
         Seq.item (index + 1) s
 
-let startAndEndtoTuple line = (Seq.head line, Seq.last line)
+let endsToTuple line = (Seq.head line, Seq.last line)
+
+let split chars (s: string) = s.Split(chars)
