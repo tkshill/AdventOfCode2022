@@ -78,8 +78,6 @@ let isOverlap ((l, r), (l2, r2)) =
 
 let part2 = Seq.filter (stringToPairs >> isOverlap) >> Seq.length
 
-type Solution(input: string seq) =
-    inherit Utility.Solution(input)
-    let input = input
-    override this.Part1 = part1 input |> string
-    override this.Part2 = part2 input |> string
+let solution (input: string seq) =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }

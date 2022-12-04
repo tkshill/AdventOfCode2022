@@ -2,12 +2,12 @@
 open System.Net.Http
 open Utility
 
-let getSolution (input: string seq) : string -> Solution option =
+let getSolution (input: string seq) : string -> SolutionRecord option =
     function
-    | "1" -> Some(Day1.Solution input)
-    | "2" -> Some(Day2.Solution input)
-    | "3" -> Some(Day3.Solution input)
-    | "4" -> Some(Day4.Solution input)
+    | "1" -> Some(Day1.solution input)
+    | "2" -> Some(Day2.solution input)
+    | "3" -> Some(Day3.solution input)
+    | "4" -> Some(Day4.solution input)
     | _ -> None
 
 

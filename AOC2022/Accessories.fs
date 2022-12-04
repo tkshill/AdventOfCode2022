@@ -1,13 +1,7 @@
 module Utility
 
-type SolutionResult<'T when 'T :> System.IComparable> =
-    class
-    end
-
-[<AbstractClass>]
-type Solution(input: string seq) =
-    abstract member Part1: string
-    abstract member Part2: string
+type SolutionRecord = { Part1: string; Part2: string }
+type Solution = string seq -> SolutionRecord
 
 type MaybeBuilder() =
     member this.Bind(x, f) =

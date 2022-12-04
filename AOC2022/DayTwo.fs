@@ -93,8 +93,6 @@ let toPlays2 (a, b) = toPlay a, actionToPlay (toPlay a) b
 let part2 input =
     input |> Seq.map (endsToTuple >> toPlays2 >> score) |> Seq.sum
 
-type Solution(input: string seq) =
-    inherit Utility.Solution(input)
-    let input = input
-    override this.Part1 = part1 input |> string
-    override this.Part2 = part2 input |> string
+let solution input =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
