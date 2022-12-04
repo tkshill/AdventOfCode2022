@@ -52,11 +52,11 @@ let stringToPairs = chunk [| ',' |] >> tupleMap (chunk [| '-' |] >> tupleMap int
 
 let isSubset ((l, r), right) =
     match right with
-    | (l2, r2) when l2 >= l && r2 <= r -> true
-    | (l2, r2) when l2 <= l && r2 >= r -> true
-    | _ -> false
+    | (l2, r2) when l2 >= l && r2 <= r -> 1
+    | (l2, r2) when l2 <= l && r2 >= r -> 1
+    | _ -> 0
 
-let part1 = Seq.filter (stringToPairs >> isSubset) >> Seq.length
+let part1 = Seq.sumBy (stringToPairs >> isSubset)
 
 (*
     --- Part Two ---
@@ -71,7 +71,6 @@ In the above example, the first two pairs (2-4,6-8 and 2-3,4-5) don't overlap, w
 So, in this example, the number of overlapping assignment pairs is 4.
 
 In how many assignment pairs do the ranges overlap?
-
 *)
 
 let isOverlap ((l, r), (l2, r2)) =
