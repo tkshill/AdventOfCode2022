@@ -45,3 +45,5 @@ let rec trimEnds sequence =
     | head :: tail when head = "" -> trimEnds (Seq.ofList tail)
     | x when Seq.last x = "" -> trimEnds (dropLast x)
     | _ -> sequence
+
+let unpack f (a, b) = f a b
