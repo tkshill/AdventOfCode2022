@@ -63,7 +63,7 @@ let parseCrates =
     >> Seq.indexed // get the keys
     >> Seq.filter (fst >> (fun key -> key % 4 = 1)) // the numbers are 4 characters apart
     >> Seq.map (snd >> Seq.filter ((<>) ' ') >> Seq.toArray) // filter out empty spaces
-    >> Seq.toArray // Arrays for index mutation mutable
+    >> Seq.toArray // Arrays cuz we're gonna be mutating by index
 
 let parseProcedure =
     split ("movefromto []".ToCharArray(0, 13)) // split on non number chars
