@@ -8,6 +8,7 @@ let getSolution (input: string seq) : string -> SolutionRecord option =
     | "2" -> Some(Day2.solution input)
     | "3" -> Some(Day3.solution input)
     | "4" -> Some(Day4.solution input)
+    | "5" -> Some(Day5.solution input)
     | _ -> None
 
 
@@ -15,7 +16,7 @@ let getData input =
     let fileName = $"./day{input}.txt"
 
     if File.Exists(fileName) then
-        Some(File.ReadAllLines fileName |> Seq.map (fun s -> s.TrimStart().TrimEnd()))
+        Some(File.ReadAllLines fileName)
     else
         // task {
         //     use client = new HttpClient()

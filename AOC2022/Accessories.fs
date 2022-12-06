@@ -28,6 +28,20 @@ let next s value =
     else
         Seq.item (index + 1) s
 
-let endsToTuple line = (Seq.head line, Seq.last line)
+let endsToTuple sequence = (Seq.head sequence, Seq.last sequence)
 
 let split chars (s: string) = s.Split(chars)
+
+let splitBy condition sequence =
+    (Seq.takeWhile condition sequence, Seq.skipWhile condition sequence)
+
+let dropLast sequence =
+    Seq.removeAt (Seq.length sequence - 1) sequence
+
+let rec trimEnds sequence =
+    match Seq.toList sequence with
+    | [] -> Seq.empty
+    | [ x ] when x = "" -> Seq.empty
+    | head :: tail when head = "" -> trimEnds (Seq.ofList tail)
+    | x when Seq.last x = "" -> trimEnds (dropLast x)
+    | _ -> sequence
