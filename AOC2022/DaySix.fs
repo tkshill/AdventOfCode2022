@@ -39,7 +39,7 @@ open Utility
 let rec counter limit count cache (head :: tail) =
     match cache with
     | x when Set.count (set x) = limit -> count
-    | x when List.length x = limit -> counter limit (count + 1) (head :: (List.ofSeq (dropLast x))) tail
+    | x when List.length x = limit -> counter limit (count + 1) (head :: List.dropLast x) tail
     | _ -> counter limit (count + 1) (head :: cache) tail
 
 let part1 = Seq.head >> Seq.toList >> counter 4 0 List.Empty

@@ -53,3 +53,7 @@ let notEqualTo value = ((<>) value)
 let tupleMap2 f f2 (a, b) = (f a, f2 b)
 
 let isnt f = f >> not
+
+type Collections.List<'a> with
+
+    static member dropLast(ls: 'a list) = List.removeAt (Seq.length ls - 1) ls
