@@ -78,8 +78,6 @@ let parseInput =
     >> (fun (crateData, procedureData) -> parseCrates crateData, parseProcedures procedureData)
 
 let folder order (state: State) (move :: from :: to_ :: rest) =
-    printfn "%A" (move, from, to_)
-    printfn "%A" state
     let toMove = Array.take move state[from - 1] |> order
 
     state[from - 1] <- Array.skip move state[from - 1]
@@ -89,7 +87,7 @@ let folder order (state: State) (move :: from :: to_ :: rest) =
 
 let part1 =
     parseInput
-    >> fun (crates, procedures) -> Seq.fold (folder Array.rev) crates procedures
+    >> unpack (Seq.fold (folder Array.rev))
     >> Array.choose Array.tryHead
     >> System.String
 
