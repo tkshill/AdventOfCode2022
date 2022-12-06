@@ -9,6 +9,7 @@ let getSolution (input: string seq) : string -> SolutionRecord option =
     | "3" -> Some(Day3.solution input)
     | "4" -> Some(Day4.solution input)
     | "5" -> Some(Day5.solution input)
+    | "6" -> Some(Day6.solution input)
     | _ -> None
 
 
