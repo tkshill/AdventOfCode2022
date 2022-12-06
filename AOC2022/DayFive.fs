@@ -62,31 +62,33 @@ let parseCrates =
     >> Seq.transpose // spin baby, spin
     >> Seq.indexed // get the keys
     >> Seq.filter (fst >> (fun key -> key % 4 = 1)) // the numbers are 4 characters apart
-    >> Seq.map (snd >> Seq.filter ((<>) ' ') >> Seq.toArray) // filter out empty spaces
+    >> Seq.map (snd >> Seq.filter (notEqualTo ' ') >> Seq.toArray) // filter out empty spaces
     >> Seq.toArray // Arrays cuz we're gonna be mutating by index
 
 let parseProcedure =
     split ("movefromto []".ToCharArray(0, 13)) // split on non number chars
-    >> Seq.filter ((<>) "") // remove empty strings
+    >> Seq.filter (notEqualTo "") // remove empty strings
     >> Seq.map int // make em ints!
     >> Seq.toList // lists for deconstruction
 
 // more filtering empty values because meh.
-let parseProcedures = Seq.map parseProcedure >> (Seq.filter (Seq.isEmpty >> not))
+let parseProcedures = Seq.map parseProcedure >> (Seq.filter (isnt Seq.isEmpty))
+
+let startsWithM =
+    Seq.tryHead >> Option.map (notEqualTo 'm') >> Option.defaultValue false
 
 let parseInput =
     // split on first line that starts with 'm'
-    splitBy (Seq.tryHead >> Option.map ((<>) 'm') >> Option.defaultValue false)
-    >> (fun (crateData, procedureData) -> parseCrates crateData, parseProcedures procedureData)
+    splitBy startsWithM >> tupleMap2 parseCrates parseProcedures
 
 // REDUCERS
-let folder order (state: State) (move :: from :: to_ :: _) =
-    let toMove = Array.take move state[from - 1] |> order
+let folder order (crates: State) (amt :: from :: to_ :: _) =
+    let cratesToMove = Array.take amt crates[from - 1] |> order
 
-    state[from - 1] <- Array.skip move state[from - 1]
-    state[to_ - 1] <- Array.append toMove state[to_ - 1]
+    crates[from - 1] <- Array.skip amt crates[from - 1]
+    crates[to_ - 1] <- Array.append cratesToMove crates[to_ - 1]
 
-    state
+    crates
 
 // put it all together
 let solve order =

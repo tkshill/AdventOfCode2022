@@ -47,3 +47,9 @@ let rec trimEnds sequence =
     | _ -> sequence
 
 let unpack f (a, b) = f a b
+
+let notEqualTo value = ((<>) value)
+
+let tupleMap2 f f2 (a, b) = (f a, f2 b)
+
+let isnt f = f >> not
