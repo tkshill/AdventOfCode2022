@@ -85,11 +85,14 @@ let folder order (state: State) (move :: from :: to_ :: rest) =
 
     state
 
-let part1 =
+let solve order =
     parseInput
-    >> unpack (Seq.fold (folder Array.rev))
+    >> unpack (Seq.fold (folder order))
     >> Array.choose Array.tryHead
     >> System.String
+
+let part1 = solve Array.rev
+
 
 (*
     --- Part Two ---
@@ -137,11 +140,7 @@ In this example, the CrateMover 9001 has put the crates in a totally different o
 Before the rearrangement process finishes, update your simulation so that the Elves know where they should stand to be ready to unload the final supplies. After the rearrangement procedure completes, what crate ends up on top of each stack?
 *)
 
-let part2 =
-    parseInput
-    >> fun (crates, procedures) -> Seq.fold (folder id) crates procedures
-    >> Array.choose Array.tryHead
-    >> System.String
+let part2 = solve id
 
 let solution (input: string seq) =
     { Part1 = part1 input |> string
