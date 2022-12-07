@@ -81,10 +81,9 @@ module Day7
 open Utility
 
 let (|Prefix|_|) (p: string) (s: string) =
-    if s.StartsWith(p) then
-        Some(s.Substring(p.Length))
-    else
-        None
+    match s.StartsWith(p) with
+    | true -> Some(s.Substring(p.Length))
+    | false -> None
 
 type FileSystemItem =
     | File of File
@@ -111,7 +110,7 @@ let mutable instructions: string array = Array.empty
 
 let rec build (dir: Directory) =
     function
-    | Skip
+    | Skip -> advance dir
     | ReturnHome when dir.Name = "/" -> advance dir
     | ReturnHome
     | MoveUp -> dir
@@ -184,7 +183,7 @@ let part2 input =
 
     let total = toFileSystemItem () |> cataFS size collectSizes
 
-    directorySizes |> List.filter ((<=) (30000000 - (70000000 - total))) |> List.min
+    directorySizes |> List.filter ((<=) (total - 40000000)) |> List.min
 
 let solution input =
     { Part1 = part1 input |> string
