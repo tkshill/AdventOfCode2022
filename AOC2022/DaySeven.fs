@@ -111,7 +111,7 @@ let mutable instructions: string array = Array.empty
 
 let rec build (dir: Directory) =
     function
-    | Skip -> advance dir
+    | Skip
     | ReturnHome when dir.Name = "/" -> advance dir
     | ReturnHome
     | MoveUp -> dir
