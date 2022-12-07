@@ -81,24 +81,19 @@ module Day7
 open Utility
 
 let (|Prefix|_|) (p: string) (s: string) =
-    if s.StartsWith(p) then
-        Some(s.Substring(p.Length))
-    else
-        None
+    ternary (s.StartsWith p) (Some(s.Substring p.Length)) None
 
 type FileSystemItem =
     | File of File
     | Directory of Directory
 
-and File =
-    { Name: string
-      Size: int }
-
-    static member size(f) = f.Size
+and File = { Name: string; Size: int }
 
 and Directory =
     { Name: string
       Items: FileSystemItem list }
+
+let size f = f.Size
 
 let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
     function
@@ -151,7 +146,7 @@ let part1 input =
     { Name = "/"; Items = [] }
     |> advance
     |> Directory
-    |> cataFS File.size under100k
+    |> cataFS size under100k
     |> ignore
 
     part1sum
@@ -189,7 +184,7 @@ let part2 input =
         { Name = "/"; Items = [] }
         |> advance
         |> Directory
-        |> cataFS File.size collectDirectorySizes
+        |> cataFS size collectDirectorySizes
 
     directorySizes
     |> List.filter (fun dir -> snd dir > (30000000 - (70000000 - totalsize)))

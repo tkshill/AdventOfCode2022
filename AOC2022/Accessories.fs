@@ -57,3 +57,5 @@ let isnt f = f >> not
 type Collections.List<'a> with
 
     static member dropLast(ls: 'a list) = List.removeAt (Seq.length ls - 1) ls
+
+let ternary condition ifTrue ifFalse = if condition then ifTrue else ifFalse
