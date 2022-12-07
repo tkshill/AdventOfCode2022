@@ -95,7 +95,9 @@ and Directory =
     { Name: string
       Items: FileSystemItem list }
 
-let size f = f.Size
+let fileSize f = f.Size
+
+let dirSize sideEffect (_, sizes) = sideEffect (List.sum sizes)
 
 let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
     function
@@ -133,14 +135,12 @@ let rec cataFS fFile fDir =
     | File file -> fFile file
     | Directory dir -> fDir (dir, List.map (cataFS fFile fDir) dir.Items)
 
-let under100k (_, sizes) =
-    let total = List.sum sizes
-
-    if total <= 100000 then
-        part1sum <- part1sum + total
-        total
-    else
-        total
+let under100k =
+    function
+    | x when x < 100000 ->
+        part1sum <- part1sum + x
+        x
+    | x -> x
 
 let toFileSystemItem () =
     { Name = "/"; Items = [] } |> advance |> Directory
@@ -148,7 +148,7 @@ let toFileSystemItem () =
 let part1 input =
     instructions <- input
 
-    toFileSystemItem () |> cataFS size under100k |> ignore
+    toFileSystemItem () |> cataFS fileSize (dirSize under100k) |> ignore
 
     part1sum
 
@@ -174,14 +174,14 @@ Find the smallest directory that, if deleted, would free up enough space on the 
 
 let mutable directorySizes: int list = List.empty
 
-let collectSizes (_, sizes) =
-    directorySizes <- (List.sum sizes) :: directorySizes
-    List.sum (sizes)
+let collectSizes size =
+    directorySizes <- size :: directorySizes
+    size
 
 let part2 input =
     instructions <- input
 
-    let total = toFileSystemItem () |> cataFS size collectSizes
+    let total = toFileSystemItem () |> cataFS fileSize (dirSize collectSizes)
 
     directorySizes |> List.filter ((<=) (total - 40000000)) |> List.min
 
