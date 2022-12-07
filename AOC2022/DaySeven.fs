@@ -95,10 +95,6 @@ and Directory =
     { Name: string
       Items: FileSystemItem list }
 
-let fileSize f = f.Size
-
-let dirSize sideEffect (_, sizes) = sideEffect (List.sum sizes)
-
 let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
     function
     | Prefix "$ cd " name when name = "/" -> ReturnHome
@@ -130,17 +126,16 @@ and advance dir =
 
 let mutable part1sum = 0
 
-let rec cataFS fFile fDir =
+let rec size sideEffect =
     function
-    | File file -> fFile file
-    | Directory dir -> fDir (dir, List.map (cataFS fFile fDir) dir.Items)
+    | File file -> file.Size
+    | Directory dir ->
+        let total = List.sumBy (size sideEffect) dir.Items
+        sideEffect total
+        total
 
-let under100k =
-    function
-    | x when x < 100000 ->
-        part1sum <- part1sum + x
-        x
-    | x -> x
+let under100k x =
+    if x < 100000 then part1sum <- part1sum + x else ()
 
 let toFileSystemItem () =
     { Name = "/"; Items = [] } |> advance |> Directory
@@ -148,7 +143,7 @@ let toFileSystemItem () =
 let part1 input =
     instructions <- input
 
-    toFileSystemItem () |> cataFS fileSize (dirSize under100k) |> ignore
+    toFileSystemItem () |> (size under100k) |> ignore
 
     part1sum
 
@@ -176,12 +171,11 @@ let mutable directorySizes: int list = List.empty
 
 let collectSizes size =
     directorySizes <- size :: directorySizes
-    size
 
 let part2 input =
     instructions <- input
 
-    let total = toFileSystemItem () |> cataFS fileSize (dirSize collectSizes)
+    let total = toFileSystemItem () |> size collectSizes
 
     directorySizes |> List.filter ((<=) (total - 40000000)) |> List.min
 
