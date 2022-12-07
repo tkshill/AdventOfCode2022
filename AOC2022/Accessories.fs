@@ -1,7 +1,7 @@
 module Utility
 
-type SolutionRecord = { Part1: string; Part2: string }
-type Solution = string seq -> SolutionRecord
+type Solution = { Part1: string; Part2: string }
+type SolutionBuilder = string seq -> Solution
 
 type MaybeBuilder() =
     member this.Bind(x, f) =
@@ -39,11 +39,11 @@ let dropLast sequence =
     Seq.removeAt (Seq.length sequence - 1) sequence
 
 let rec trimEnds sequence =
-    match Seq.toList sequence with
-    | [] -> Seq.empty
-    | [ x ] when x = "" -> Seq.empty
-    | head :: tail when head = "" -> trimEnds (Seq.ofList tail)
-    | x when Seq.last x = "" -> trimEnds (dropLast x)
+    match sequence with
+    | [||]
+    | [| "" |] -> Array.empty
+    | x when Array.head x = "" -> trimEnds (Array.tail x)
+    | x when Array.last x = "" -> trimEnds (x[.. (Array.length x - 2)])
     | _ -> sequence
 
 let unpack f (a, b) = f a b

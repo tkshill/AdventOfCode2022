@@ -2,7 +2,7 @@
 open System.Net.Http
 open Utility
 
-let getSolution (input: string seq) : string -> SolutionRecord option =
+let getSolution input : string -> Solution option =
     function
     | "1" -> Some(Day1.solution input)
     | "2" -> Some(Day2.solution input)
@@ -10,6 +10,7 @@ let getSolution (input: string seq) : string -> SolutionRecord option =
     | "4" -> Some(Day4.solution input)
     | "5" -> Some(Day5.solution input)
     | "6" -> Some(Day6.solution input)
+    | "7" -> Some(Day7.solution input)
     | _ -> None
 
 
@@ -17,7 +18,7 @@ let getData input =
     let fileName = $"./data/day{input}.txt"
 
     if File.Exists(fileName) then
-        Some(File.ReadAllLines fileName)
+        Some(File.ReadAllLines fileName |> trimEnds)
     else
         // task {
         //     use client = new HttpClient()
