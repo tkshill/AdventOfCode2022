@@ -104,7 +104,7 @@ let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
     | "$ ls" -> Skip
     | file -> MakeFile(file.Split([| ' ' |]) |> endsToTuple |> tupleMap2 int id)
 
-let mutable instructions: string array = Array.empty
+let mutable commands: string list = []
 
 let rec build (dir: Directory) =
     function
@@ -117,12 +117,11 @@ let rec build (dir: Directory) =
         advance { dir with Items = (Directory(advance { Name = name; Items = List.Empty })) :: dir.Items }
 
 and advance dir =
-    if Array.isEmpty instructions then
-        dir
-    else
-        let next = Array.head instructions
-        instructions <- Array.tail instructions
-        build dir next
+    match commands with
+    | [] -> dir
+    | head :: tail ->
+        commands <- tail
+        build dir head
 
 let mutable part1sum = 0
 
@@ -141,7 +140,7 @@ let toFileSystemItem () =
     { Name = "/"; Items = [] } |> advance |> Directory
 
 let part1 input =
-    instructions <- input
+    commands <- Seq.toList input
 
     toFileSystemItem () |> (size under100k) |> ignore
 
@@ -167,13 +166,13 @@ Find the smallest directory that, if deleted, would free up enough space on the 
 
 *)
 
-let mutable directorySizes: int list = List.empty
+let mutable directorySizes: int list = []
 
 let collectSizes size =
     directorySizes <- size :: directorySizes
 
 let part2 input =
-    instructions <- input
+    commands <- Seq.toList input
 
     let total = toFileSystemItem () |> size collectSizes
 
