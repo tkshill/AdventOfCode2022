@@ -81,7 +81,10 @@ module Day7
 open Utility
 
 let (|Prefix|_|) (p: string) (s: string) =
-    ternary (s.StartsWith p) (Some(s.Substring p.Length)) None
+    if s.StartsWith(p) then
+        Some(s.Substring(p.Length))
+    else
+        None
 
 type FileSystemItem =
     | File of File
@@ -140,14 +143,13 @@ let under100k (_, sizes) =
     else
         total
 
+let toFileSystemItem () =
+    { Name = "/"; Items = [] } |> advance |> Directory
+
 let part1 input =
     instructions <- input
 
-    { Name = "/"; Items = [] }
-    |> advance
-    |> Directory
-    |> cataFS size under100k
-    |> ignore
+    toFileSystemItem () |> cataFS size under100k |> ignore
 
     part1sum
 
@@ -171,25 +173,18 @@ Find the smallest directory that, if deleted, would free up enough space on the 
 
 *)
 
-let mutable directorySizes: (string * int) list = List.empty
+let mutable directorySizes: int list = List.empty
 
-let collectDirectorySizes (dir, sizes) =
-    directorySizes <- (dir.Name, List.sum sizes) :: directorySizes
+let collectSizes (_, sizes) =
+    directorySizes <- (List.sum sizes) :: directorySizes
     List.sum (sizes)
 
 let part2 input =
     instructions <- input
 
-    let totalsize =
-        { Name = "/"; Items = [] }
-        |> advance
-        |> Directory
-        |> cataFS size collectDirectorySizes
+    let total = toFileSystemItem () |> cataFS size collectSizes
 
-    directorySizes
-    |> List.filter (fun dir -> snd dir > (30000000 - (70000000 - totalsize)))
-    |> List.minBy snd
-    |> snd
+    directorySizes |> List.filter ((<=) (30000000 - (70000000 - total))) |> List.min
 
 let solution input =
     { Part1 = part1 input |> string
