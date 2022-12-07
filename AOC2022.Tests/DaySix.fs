@@ -3,7 +3,8 @@ module DaySixTests
 open System.IO
 open Xunit
 
-let solution = File.ReadAllLines "day6test.txt" |> fun data -> Day6.solution data
+let solution =
+    File.ReadAllLines "./data/day6test.txt" |> fun data -> Day6.solution data
 
 [<Theory>]
 [<InlineData("mjqjpqmgbljsphdztnvjfqwrcgsmlb", "7")>]

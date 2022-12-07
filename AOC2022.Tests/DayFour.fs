@@ -3,7 +3,8 @@ module DayFourTests
 open System.IO
 open Xunit
 
-let solution = File.ReadAllLines "day4test.txt" |> fun data -> Day4.solution data
+let solution =
+    File.ReadAllLines "./data/day4test.txt" |> fun data -> Day4.solution data
 
 [<Theory>]
 [<InlineData("99-99,18-99", "1")>]

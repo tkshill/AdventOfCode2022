@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Compile Include="*.fs" />
-    <Content Include="*.txt">
+    <Content Include="data\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

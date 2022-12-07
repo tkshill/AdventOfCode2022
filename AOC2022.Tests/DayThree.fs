@@ -3,7 +3,8 @@ module DayThreeTests
 open System.IO
 open Xunit
 
-let solution = File.ReadAllLines "day3test.txt" |> fun data -> Day3.solution data
+let solution =
+    File.ReadAllLines "./data/day3test.txt" |> fun data -> Day3.solution data
 
 [<Fact>]
 let ``Part 1`` () = Assert.Equal("157", solution.Part1)

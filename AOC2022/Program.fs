@@ -14,7 +14,7 @@ let getSolution (input: string seq) : string -> SolutionRecord option =
 
 
 let getData input =
-    let fileName = $"./day{input}.txt"
+    let fileName = $"./data/day{input}.txt"
 
     if File.Exists(fileName) then
         Some(File.ReadAllLines fileName)
