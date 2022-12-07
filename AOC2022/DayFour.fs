@@ -46,7 +46,7 @@ module Day4
 
 open Utility
 
-let chunk sep = split sep >> endsToTuple
+let chunk seperator = split seperator >> endsToTuple
 
 let stringToPairs = chunk [| ',' |] >> tupleMap (chunk [| '-' |] >> tupleMap int)
 
@@ -74,7 +74,7 @@ In how many assignment pairs do the ranges overlap?
 *)
 
 let isOverlap ((l, r), (l2, r2)) =
-    Set.intersect (set { l..r }) (set { l2..r2 }) |> Set.isEmpty |> not
+    Set.intersect (set { l..r }) (set { l2..r2 }) |> isnt Set.isEmpty
 
 let part2 = Seq.filter (stringToPairs >> isOverlap) >> Seq.length
 

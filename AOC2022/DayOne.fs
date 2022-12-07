@@ -43,14 +43,12 @@ module Day1
 
 open Utility
 
-let folder (head :: tail) line =
-    if line = "" then
-        0 :: head :: tail
-    else
-        (int line + head) :: tail
+let folder (head :: tail) =
+    function
+    | "" -> 0 :: head :: tail
+    | line -> (int line + head) :: tail
 
-let part1 input =
-    input |> Seq.fold folder [ 0 ] |> Seq.max
+let part1: string seq -> int = Seq.fold folder [ 0 ] >> Seq.max
 
 (*
     By the time you calculate the answer to the Elves' question, they've already realized that the Elf carrying the most Calories of food might eventually run out of snacks.
@@ -62,8 +60,8 @@ let part1 input =
     Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
 *)
 
-let part2 input =
-    input |> Seq.fold folder [ 0 ] |> Seq.sort |> Seq.rev |> Seq.take 3 |> Seq.sum
+let part2: string seq -> int =
+    Seq.fold folder [ 0 ] >> Seq.sort >> Seq.rev >> Seq.take 3 >> Seq.sum
 
 let solution input =
     { Part1 = part1 input |> string

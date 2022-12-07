@@ -40,8 +40,8 @@ let plays = [ Rock; Scissors; Paper ]
 
 type Play with
 
-    member this.beats p =
-        if next plays this = p then true else false
+    member this.beats play =
+        if next plays this = play then true else false
 
 let points =
     function
@@ -60,12 +60,12 @@ let toPlay =
 
 let score: ((Play * Play) -> int) =
     function
-    | (a, b) when b.beats a -> 6 + points b
-    | (a, b) when a = b -> 3 + points b
-    | (_, b) -> points b
+    | (opponent, player) when player.beats opponent -> 6 + points player
+    | (opponent, player) when opponent = player -> 3 + points player
+    | (_, player) -> points player
 
-let part1 input =
-    input |> Seq.map (endsToTuple >> (tupleMap toPlay) >> score) |> Seq.sum
+let part1: string seq -> int =
+    Seq.map (endsToTuple >> (tupleMap toPlay) >> score) >> Seq.sum
 
 (*
     --- Part Two ---
@@ -82,16 +82,17 @@ Following the Elf's instructions for the second column, what would your total sc
 
 *)
 
-let actionToPlay p =
+let actionToPlay play =
     function
-    | 'X' -> p |> next plays
-    | 'Y' -> p
-    | 'Z' -> p |> next plays |> next plays
+    | 'X' -> play |> next plays
+    | 'Y' -> play
+    | 'Z' -> play |> next plays |> next plays
 
-let toPlays2 (a, b) = toPlay a, actionToPlay (toPlay a) b
+let toPlays2 (opponentChar, playerChar) =
+    let opponentPlay = toPlay opponentChar
+    opponentPlay, actionToPlay opponentPlay playerChar
 
-let part2 input =
-    input |> Seq.map (endsToTuple >> toPlays2 >> score) |> Seq.sum
+let part2: string seq -> int = Seq.map (endsToTuple >> toPlays2 >> score) >> Seq.sum
 
 let solution input =
     { Part1 = part1 input |> string

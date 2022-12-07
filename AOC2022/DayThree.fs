@@ -38,8 +38,8 @@ open Utility
 
 let offset =
     function
-    | x when x > 96 -> x - 96
-    | x -> x - 38
+    | charNum when charNum > 96 -> charNum - 96
+    | charNum -> charNum - 38
 
 let calculate = Set.intersectMany >> Seq.head >> int >> offset
 
