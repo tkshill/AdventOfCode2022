@@ -74,9 +74,11 @@ In how many assignment pairs do the ranges overlap?
 *)
 
 let isOverlap ((l, r), (l2, r2)) =
-    Set.intersect (set { l..r }) (set { l2..r2 }) |> isnt Set.isEmpty
+    match Set.intersect (set { l..r }) (set { l2..r2 }) with
+    | x when x = Set.empty -> 0
+    | _ -> 1
 
-let part2 = Seq.filter (stringToPairs >> isOverlap) >> Seq.length
+let part2 = Seq.sumBy (stringToPairs >> isOverlap)
 
 let solution (input: string seq) =
     { Part1 = part1 input |> string
