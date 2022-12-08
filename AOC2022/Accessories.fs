@@ -58,4 +58,23 @@ type Collections.List<'a> with
 
     static member dropLast(ls: 'a list) = List.removeAt (Seq.length ls - 1) ls
 
-let ternary condition ifTrue ifFalse = if condition then ifTrue else ifFalse
+let cond condition ifTrue ifFalse = if condition then ifTrue else ifFalse
+
+let to2Darray seq =
+    let rows = Seq.length seq
+    let columns = seq |> Seq.head |> Seq.length
+    let array = Array2D.zeroCreate rows columns
+    Seq.iteri (fun idx row -> Seq.iteri (fun jdx value -> Array2D.set array idx jdx value) row) seq
+    array
+
+let getAllElements (a: 'a[,]) : seq<'a> =
+    seq {
+        for x in a do
+            yield x :?> 'a
+    }
+
+let boolToInt b = if b then 1 else 0
+
+let log transformer value =
+    printfn "%A" (transformer value)
+    value
