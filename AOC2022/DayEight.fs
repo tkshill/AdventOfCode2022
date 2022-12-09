@@ -42,9 +42,9 @@ let adjacents (a: char[,]) r c =
 let isVisible (grid: char[,]) row col value =
     adjacents grid row col |> Seq.exists (Seq.forall ((>) value))
 
-let part1 (input: string array) =
-    let grid = to2Darray input
-    grid |> Array2D.mapi (isVisible grid) |> getAllElements |> Seq.sumBy boolToInt
+let part1 input =
+    let grid = array2D input
+    grid |> Array2D.mapi (isVisible grid) |> seqFrom2D |> Seq.sumBy boolToInt
 
 (*
     Content with the amount of tree cover available, the Elves just need to know the best spot to build their tree house: they would like to be able to see a lot of trees.
@@ -85,16 +85,16 @@ Consider each tree on your map. What is the highest scenic score possible for an
 
 let rec takeWhileInc count cond =
     function
-    | x when Seq.isEmpty x -> count
-    | x when cond (Seq.head x) = false -> count + 1
-    | x -> takeWhileInc (count + 1) cond (Seq.tail x)
+    | [||] -> count
+    | x when cond (Array.head x) = false -> inc count
+    | x -> takeWhileInc (inc count) cond (Array.tail x)
 
 let scenicScore (grid: char[,]) r c value =
     adjacents grid r c |> Seq.map (takeWhileInc 0 ((>) value)) |> Seq.reduce (*)
 
 let part2 input =
-    let grid = to2Darray input
-    grid |> Array2D.mapi (scenicScore grid) |> getAllElements |> Seq.max
+    let grid = array2D input
+    grid |> Array2D.mapi (scenicScore grid) |> seqFrom2D |> Seq.max
 
 let solution input =
     { Part1 = part1 input |> string

@@ -50,10 +50,10 @@ let chunk seperator = split seperator >> endsToTuple
 
 let stringToPairs = chunk [| ',' |] >> tupleMap (chunk [| '-' |] >> tupleMap int)
 
-let isSubset ((l, r), right) =
-    match right with
-    | (l2, r2) when l2 >= l && r2 <= r -> 1
-    | (l2, r2) when l2 <= l && r2 >= r -> 1
+let isSubset =
+    function
+    | (l, r), (l2, r2) when l2 >= l && r2 <= r -> 1
+    | (l, r), (l2, r2) when l2 <= l && r2 >= r -> 1
     | _ -> 0
 
 let part1 = Seq.sumBy (stringToPairs >> isSubset)
