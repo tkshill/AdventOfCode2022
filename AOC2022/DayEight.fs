@@ -82,15 +82,15 @@ Consider each tree on your map. What is the highest scenic score possible for an
 let rec takeWhileInc result cond =
     function
     | x when Seq.isEmpty x -> result
-    | x when cond (Seq.head x) = false -> Seq.head x :: result
-    | x -> takeWhileInc (Seq.head x :: result) cond (Seq.tail x)
+    | x when cond (Seq.head x) = false -> result + 1
+    | x -> takeWhileInc (result + 1) cond (Seq.tail x)
 
 let scenicScore (arr: char[,]) row col value =
     [ Array.rev arr[.. (row - 1), col]
       arr[(row + 1) .., col]
       Array.rev arr[row, .. (col - 1)]
       arr[row, (col + 1) ..] ]
-    |> Seq.map ((takeWhileInc [] ((>) value)) >> Seq.length)
+    |> Seq.map (takeWhileInc 0 ((>) value))
     |> Seq.reduce (*)
 
 let part2 input =
