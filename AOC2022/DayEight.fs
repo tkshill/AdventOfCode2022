@@ -34,13 +34,17 @@ Consider your map; how many trees are visible from outside the grid?
 
 *)
 
-let isVisible (a: char[,]) r c value =
-    [ a[.. (r - 1), c]; a[(r + 1) .., c]; a[r, .. (c - 1)]; a[r, (c + 1) ..] ]
-    |> Seq.exists (Seq.forall ((>) value))
+let v = Array.rev
+
+let adjacents (a: char[,]) r c =
+    [ v a[.. (r - 1), c]; a[(r + 1) .., c]; v a[r, .. (c - 1)]; a[r, (c + 1) ..] ]
+
+let isVisible (grid: char[,]) row col value =
+    adjacents grid row col |> Seq.exists (Seq.forall ((>) value))
 
 let part1 (input: string array) =
-    let arr = to2Darray input
-    arr |> Array2D.mapi (isVisible arr) |> getAllElements |> Seq.sumBy boolToInt
+    let grid = to2Darray input
+    grid |> Array2D.mapi (isVisible grid) |> getAllElements |> Seq.sumBy boolToInt
 
 (*
     Content with the amount of tree cover available, the Elves just need to know the best spot to build their tree house: they would like to be able to see a lot of trees.
@@ -79,23 +83,18 @@ Consider each tree on your map. What is the highest scenic score possible for an
 
 *)
 
-let rec takeWhileInc result cond =
+let rec takeWhileInc count cond =
     function
-    | x when Seq.isEmpty x -> result
-    | x when cond (Seq.head x) = false -> result + 1
-    | x -> takeWhileInc (result + 1) cond (Seq.tail x)
+    | x when Seq.isEmpty x -> count
+    | x when cond (Seq.head x) = false -> count + 1
+    | x -> takeWhileInc (count + 1) cond (Seq.tail x)
 
-let scenicScore (arr: char[,]) row col value =
-    [ Array.rev arr[.. (row - 1), col]
-      arr[(row + 1) .., col]
-      Array.rev arr[row, .. (col - 1)]
-      arr[row, (col + 1) ..] ]
-    |> Seq.map (takeWhileInc 0 ((>) value))
-    |> Seq.reduce (*)
+let scenicScore (grid: char[,]) r c value =
+    adjacents grid r c |> Seq.map (takeWhileInc 0 ((>) value)) |> Seq.reduce (*)
 
 let part2 input =
-    let arr = to2Darray input
-    arr |> Array2D.mapi (scenicScore arr) |> getAllElements |> Seq.max
+    let grid = to2Darray input
+    grid |> Array2D.mapi (scenicScore grid) |> getAllElements |> Seq.max
 
 let solution input =
     { Part1 = part1 input |> string
