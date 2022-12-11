@@ -206,7 +206,7 @@ let enumerate = Seq.collect parse >> Seq.scan (+) 1 >> Seq.indexed
 let part1: string seq -> int =
     enumerate
     >> Seq.map (tupleMap2 inc id)
-    >> Seq.filter (fun (idx, _) -> (idx % 40) - 20 = 0 && idx <= 220)
+    >> Seq.filter (fun (idx, _) -> (idx % 40) = 20 && idx <= 220)
     >> Seq.sumBy (fun (idx, v) -> idx * v)
 
 let pixelate =
