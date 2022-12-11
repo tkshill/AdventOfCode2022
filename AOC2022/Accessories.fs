@@ -1,5 +1,7 @@
 module Utility
 
+open System.IO
+
 type Solution = { Part1: string; Part2: string }
 type SolutionBuilder = string seq -> Solution
 
@@ -74,3 +76,11 @@ let log transformer value =
 
 let inc v = v + 1
 let dec v = v - 1
+
+let getInput dayNumber =
+    let fileName = $"./data/day{dayNumber}.txt"
+
+    if File.Exists(fileName) then
+        Some(File.ReadAllLines fileName |> trimEnds)
+    else
+        None
