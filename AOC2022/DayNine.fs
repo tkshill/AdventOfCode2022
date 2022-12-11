@@ -12,7 +12,7 @@ You step carefully; as you do, the ropes stretch and twist. You decide to distra
 
 Consider a rope with a knot at each end; these knots mark the head and the tail of the rope. If the head moves far enough away from the tail, the tail is pulled toward the head.
 
-Due to nebulous reasoning involving Planck lengths, you should be able to model the positions of the knots on a two-dimensional grid. Then, by following a hypothetical series of motions (your puzzle input) for the head, you can determine how the tail will move.
+Due to nebulous reasoning involving Planck lengths, you should be able to model the currentitions of the knots on a two-dimensional grid. Then, by following a hypothetical series of motions (your puzzle input) for the head, you can determine how the tail will move.
 
 Due to the aforementioned Planck lengths, the rope must be quite short; in fact, the head (H) and tail (T) must always be touching (diagonally adjacent and even overlapping both count as touching):
 
@@ -52,7 +52,7 @@ Otherwise, if the head and tail aren't touching and aren't in the same row or co
 ..H.. -> ...H. -> ..TH.
 .T...    .T...    .....
 .....    .....    .....
-You just need to work out where the tail goes as the head follows a series of motions. Assume the head and the tail both start at the same position, overlapping.
+You just need to work out where the tail goes as the head follows a series of motions. Assume the head and the tail both start at the same currentition, overlapping.
 
 For example:
 
@@ -64,7 +64,7 @@ R 4
 D 1
 L 5
 R 2
-This series of motions moves the head right four steps, then up four steps, then left three steps, then down one step, and so on. After each step, you'll need to update the position of the tail if the step means the head is no longer adjacent to the tail. Visually, these motions occur as follows (s marks the starting position as a reference point):
+This series of motions moves the head right four steps, then up four steps, then left three steps, then down one step, and so on. After each step, you'll need to update the currentition of the tail if the step means the head is no longer adjacent to the tail. Visually, these motions occur as follows (s marks the starting currentition as a reference point):
 
 == Initial State ==
 
@@ -233,28 +233,28 @@ s.....
 .TH...
 ......
 s.....
-After simulating the rope, you can count up all of the positions the tail visited at least once. In this diagram, s again marks the starting position (which the tail also visited) and # marks other positions the tail visited:
+After simulating the rope, you can count up all of the currentitions the tail visited at least once. In this diagram, s again marks the starting currentition (which the tail also visited) and # marks other currentitions the tail visited:
 
 ..##..
 ...##.
 .####.
 ....#.
 s###..
-So, there are 13 positions the tail visited at least once.
+So, there are 13 currentitions the tail visited at least once.
 
-Simulate your complete hypothetical series of motions. How many positions does the tail of the rope visit at least once?
+Simulate your complete hypothetical series of motions. How many currentitions does the tail of the rope visit at least once?
 
 *)
 
-let surrounding (l, r) =
-    [ (dec l, r)
-      (l, dec r)
-      (inc l, r)
-      (l, inc r)
-      (dec l, dec r)
-      (inc l, inc r)
-      (dec l, inc r)
-      (inc l, dec r) ]
+let surrounding (x, y) =
+    [ (dec x, y)
+      (x, dec y)
+      (inc x, y)
+      (x, inc y)
+      (dec x, dec y)
+      (inc x, inc y)
+      (dec x, inc y)
+      (inc x, dec y) ]
 
 let expand =
     Seq.map (split [| ' ' |] >> endsToTuple >> tupleMap2 id int)
@@ -267,28 +267,21 @@ let move (x, y) =
     | "U" -> (x, inc y)
     | "D" -> (x, dec y)
 
-let findNextTail surH surT =
-    Seq.find ((=) >> (flip Seq.exists) surT) surH
-
-let noRepeats pos =
-    function
-    | head :: tail when head = pos -> head :: tail
-    | state -> pos :: state
+let findNextTail headSurroundings tailSurroundings =
+    Seq.find ((=) >> (flip Seq.exists) tailSurroundings) headSurroundings
 
 let scanner tail =
     function
     | head when head = tail || Seq.contains head (surrounding tail) -> tail
     | head -> findNextTail (surrounding head) (surrounding tail)
 
-let rec recur state =
+let rec recur knotPath =
     function
-    | 0 -> Seq.length (set state)
-    | count ->
-        let newState = Seq.foldBack noRepeats (Seq.tail state) []
-        recur (Seq.scan scanner (0, 0) newState) (dec count)
+    | 0 -> Seq.length (set knotPath)
+    | count -> recur (Seq.scan scanner (0, 0) knotPath) (dec count)
 
-let solve n =
-    expand >> Seq.scan move (0, 0) >> (flip recur) n
+let solve iterations =
+    expand >> Seq.scan move (0, 0) >> (flip recur) iterations
 
 let part1: string seq -> int = solve 1
 
@@ -475,7 +468,7 @@ H123..  (2 covers 4)
 .1H3..  (H covers 2, 4)
 .5....
 6.....  (6 covers 7, 8, 9, s)
-Now, you need to keep track of the positions the new tail, 9, visits. In this example, the tail never moves, and so it only visits 1 position. However, be careful: more types of motion are possible than before, so you might want to visually compare your simulated rope to the one above.
+Now, you need to keep track of the currentitions the new tail, 9, visits. In this example, the tail never moves, and so it only visits 1 currentition. However, be careful: more types of motion are currentsible than before, so you might want to visually compare your simulated rope to the one above.
 
 Here's a larger example:
 
@@ -705,7 +698,7 @@ H.........................
 ..........................
 ..........................
 
-Now, the tail (9) visits 36 positions (including s) at least once:
+Now, the tail (9) visits 36 currentitions (including s) at least once:
 
 ..........................
 ..........................
@@ -728,6 +721,6 @@ Now, the tail (9) visits 36 positions (including s) at least once:
 .......#..........#.......
 ........#........#........
 .........########.........
-Simulate your complete series of motions on a larger rope with ten knots. How many positions does the tail of the rope visit at least once?
+Simulate your complete series of motions on a larger rope with ten knots. How many currentitions does the tail of the rope visit at least once?
 
 *)
