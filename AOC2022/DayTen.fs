@@ -210,8 +210,24 @@ let part1: string seq -> int =
     >> Seq.filter (fst >> flip (<=) 220)
     >> Seq.sumBy (fun (idx, v) -> idx * v)
 
+let pixelate =
+    function
+    | idx, middle when Seq.exists ((=) (idx % 40)) [ dec middle; middle; inc middle ] -> "#"
+    | _ -> "."
+
+let part2: string seq -> string =
+    enumerate
+    >> Seq.map pixelate
+    >> Seq.chunkBySize 40
+    >> Seq.truncate 6
+    >> Seq.map (String.concat "")
+    >> String.concat "\n"
+
+let solution input =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
-  
   --- Part Two ---
 It seems like the X register controls the horizontal position of a sprite. Specifically, the sprite is 3 pixels wide, and the X register sets the horizontal position of the middle of that sprite. (In this system, there is no such thing as "vertical position": if the sprite's horizontal position puts its pixels where the CRT is currently drawing, then those pixels will be drawn.)
 
@@ -336,20 +352,3 @@ Allowing the program to run to completion causes the CRT to produce the followin
 Render the image given by your program. What eight capital letters appear on your CRT?
 
 *)
-
-let pixelate =
-    function
-    | idx, middle when Seq.exists ((=) (idx % 40)) [ dec middle; middle; inc middle ] -> "#"
-    | _ -> "."
-
-let part2: string seq -> string =
-    enumerate
-    >> Seq.map pixelate
-    >> Seq.chunkBySize 40
-    >> Seq.truncate 6
-    >> Seq.map (String.concat "")
-    >> String.concat "\n"
-
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
