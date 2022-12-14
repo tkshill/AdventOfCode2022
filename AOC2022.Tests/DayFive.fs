@@ -1,10 +1,12 @@
 module DayFiveTests
 
-open System.IO
 open Xunit
+open Utility
 
 let solution =
-    File.ReadAllLines "./data/day5test.txt" |> fun data -> Day5.solution data
+    match getInput 5 with
+    | Some input -> Day11.solution input
+    | _ -> failwith "Input cannot be found"
 
 [<Fact>]
 let ``Part 1`` () = Assert.Equal("CMZ", solution.Part1)

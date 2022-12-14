@@ -14,37 +14,15 @@ let getSolution input : string -> Solution option =
     | "8" -> Some(Day8.solution input)
     | "9" -> Some(Day9.solution input)
     | "10" -> Some(Day10.solution input)
+    | "11" -> Some(Day11.solution input)
     | _ -> None
-
-
-let getData input =
-    let fileName = $"./data/day{input}.txt"
-
-    if File.Exists(fileName) then
-        Some(File.ReadAllLines fileName |> trimEnds)
-    else
-        // task {
-        //     use client = new HttpClient()
-
-        // client.DefaultRequestHeaders.Authorization <-
-        //     Headers.AuthenticationHeaderValue()
-        //     let! response = client.GetStringAsync($"https://adventofcode.com/2022/day/{input}")
-        //     do! File.WriteAllTextAsync($"./day{input}.txt", response)
-        // }
-        // |> Async.AwaitTask
-        // |> Async.RunSynchronously
-
-        // if File.Exists(fileName) then
-        //     Some(File.ReadAllLines fileName)
-        // else
-        None
 
 [<EntryPoint>]
 let main args =
     maybe {
         let! day = Seq.tryHead args
         let! part = Seq.tryItem 1 args
-        let! input = getData day
+        let! input = getInput day
         let! solution = getSolution input day
 
         match part with

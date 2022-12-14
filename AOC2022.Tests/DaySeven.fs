@@ -1,10 +1,12 @@
 module DaySevenTests
 
-open System.IO
 open Xunit
+open Utility
 
 let solution =
-    File.ReadAllLines "./data/day7test.txt" |> fun data -> Day7.solution data
+    match getInput 11 with
+    | Some input -> Day11.solution input
+    | _ -> failwith "Input cannot be found"
 
 [<Fact>]
 let ``Part 1`` () = Assert.Equal("95437", solution.Part1)

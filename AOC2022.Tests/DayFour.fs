@@ -1,10 +1,12 @@
 module DayFourTests
 
-open System.IO
 open Xunit
+open Utility
 
 let solution =
-    File.ReadAllLines "./data/day4test.txt" |> fun data -> Day4.solution data
+    match getInput 11 with
+    | Some input -> Day11.solution input
+    | _ -> failwith "Input cannot be found"
 
 [<Theory>]
 [<InlineData("99-99,18-99", "1")>]

@@ -1,11 +1,12 @@
 module DayEightTests
 
-open System.IO
 open Xunit
 open Utility
 
 let solution =
-    "./data/day8test.txt" |> File.ReadAllLines |> trimEnds |> Day8.solution
+    match getInput 11 with
+    | Some input -> Day11.solution input
+    | _ -> failwith "Input cannot be found"
 
 [<Fact>]
 let ``Part 1`` () = Assert.Equal("21", solution.Part1)
