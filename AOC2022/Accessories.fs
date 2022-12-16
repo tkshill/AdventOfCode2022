@@ -30,7 +30,8 @@ let next s value =
 
 let seqToTuple sequence = (Seq.head sequence, Seq.last sequence)
 
-let split chars (s: string) = s.Split(chars)
+let splitByChars (chars) (s: string) = s.Split(chars)
+let splitByString (str: string) (s: string) = s.Split(str)
 
 let splitBy condition sequence =
     (Seq.takeWhile condition sequence, Seq.skipWhile condition sequence)

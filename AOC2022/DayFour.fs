@@ -46,7 +46,7 @@ module Day4
 
 open Utility
 
-let chunk seperator = split seperator >> seqToTuple
+let chunk seperator = splitByChars seperator >> seqToTuple
 let spreader f = tupleMap f f
 
 let stringToPairs = chunk [| ',' |] >> spreader (chunk [| '-' |] >> spreader int)

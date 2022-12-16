@@ -53,6 +53,7 @@ After the rearrangement procedure completes, what crate ends up on top of each s
 
 module Day5
 
+open System
 open Utility
 
 type State = char array array
@@ -66,7 +67,7 @@ let parseCrates =
     >> Seq.toArray // Arrays cuz we're gonna be mutating by index
 
 let parseProcedure =
-    split ("movefromto []".ToCharArray(0, 13)) // split on non number chars
+    splitByString "movefromto []" // split on non number chars
     >> Seq.filter (notEqualTo "") // remove empty strings
     >> Seq.map int // make em ints!
     >> Seq.toList // lists for deconstruction

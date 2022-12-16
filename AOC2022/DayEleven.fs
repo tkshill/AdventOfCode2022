@@ -37,9 +37,9 @@ let parseLine (chunk: string[]) =
         |> fun s -> s.Split(", ") |> Array.map (int64 >> distinctPrimeFactors)
       Op = chunk[2][23]
       Const = chunk[2][25..] |> fun s -> if fst (Int32.TryParse s) then Some(int s) else None
-      Factor = chunk[3] |> split [| ' ' |] |> Array.last |> int64
-      IfTrue = chunk[4] |> split [| ' ' |] |> Array.last |> int
-      IfFalse = chunk[5] |> split [| ' ' |] |> Array.last |> int
+      Factor = chunk[3] |> splitByChars [| ' ' |] |> Array.last |> int64
+      IfTrue = chunk[4] |> splitByChars [| ' ' |] |> Array.last |> int
+      IfFalse = chunk[5] |> splitByChars [| ' ' |] |> Array.last |> int
       Inspections = 0 }
 
 let calculateWorry divider (d: MonkeyTracker) k l =

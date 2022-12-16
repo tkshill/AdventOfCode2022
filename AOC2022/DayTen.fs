@@ -199,7 +199,7 @@ open Utility
 let parse =
     function
     | "noop" -> Seq.singleton 0
-    | addx -> addx |> split [| ' ' |] |> Seq.last |> (fun n -> Seq.ofList [ 0; int n ])
+    | addx -> addx |> splitByChars [| ' ' |] |> Seq.last |> (fun n -> Seq.ofList [ 0; int n ])
 
 let enumerate = Seq.collect parse >> Seq.scan (+) 1 >> Seq.indexed
 
