@@ -65,7 +65,7 @@ let score: ((Play * Play) -> int) =
     | (_, player) -> points player
 
 let part1: string seq -> int =
-    Seq.map (endsToTuple >> (tupleMap toPlay) >> score) >> Seq.sum
+    Seq.sumBy (seqToTuple >> (tupleMap toPlay toPlay) >> score)
 
 (*
     --- Part Two ---
@@ -92,7 +92,7 @@ let toPlays2 (opponentChar, playerChar) =
     let opponentPlay = toPlay opponentChar
     opponentPlay, actionToPlay opponentPlay playerChar
 
-let part2: string seq -> int = Seq.map (endsToTuple >> toPlays2 >> score) >> Seq.sum
+let part2: string seq -> int = Seq.sumBy (seqToTuple >> toPlays2 >> score)
 
 let solution input =
     { Part1 = part1 input |> string

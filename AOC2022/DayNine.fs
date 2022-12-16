@@ -257,7 +257,7 @@ let surrounding (x, y) =
       (inc x, dec y) ]
 
 let expand =
-    Seq.map (split [| ' ' |] >> endsToTuple >> tupleMap2 id int)
+    Seq.map (split [| ' ' |] >> seqToTuple >> tupleMap id int)
     >> Seq.collect (unpack (flip Seq.replicate))
 
 let move (x, y) =

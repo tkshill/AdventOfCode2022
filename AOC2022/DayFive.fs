@@ -79,7 +79,7 @@ let startsWithM =
 
 let parseInput =
     // split on first line that starts with 'm'
-    splitBy startsWithM >> tupleMap2 parseCrates parseProcedures
+    splitBy startsWithM >> tupleMap parseCrates parseProcedures
 
 // REDUCERS
 let folder order (crates: State) (amt :: from :: to_ :: _) =

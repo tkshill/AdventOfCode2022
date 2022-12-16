@@ -102,7 +102,7 @@ let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
     | Prefix "$ cd " name -> MakeDirectory name
     | Prefix "dir " _
     | "$ ls" -> Skip
-    | file -> MakeFile(file.Split([| ' ' |]) |> endsToTuple |> tupleMap2 int id)
+    | file -> MakeFile(file.Split([| ' ' |]) |> seqToTuple |> tupleMap int id)
 
 let mutable commands: string list = []
 

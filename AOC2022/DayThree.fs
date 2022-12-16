@@ -43,7 +43,7 @@ let offset =
 
 let calculate = Set.intersectMany >> Seq.head >> int >> offset
 
-let part1 = Seq.map (Seq.splitInto 2 >> Seq.map set >> calculate) >> Seq.sum
+let part1 = Seq.sumBy (Seq.splitInto 2 >> Seq.map set >> calculate)
 
 (*
     --- Part Two ---
@@ -72,7 +72,7 @@ Priorities for these items must still be found to organize the sticker attachmen
 Find the item type that corresponds to the badges of each three-Elf group. What is the sum of the priorities of those item types?
 *)
 
-let part2 = Seq.chunkBySize 3 >> Seq.map (Seq.map set >> calculate) >> Seq.sum
+let part2 = Seq.chunkBySize 3 >> Seq.sumBy (Seq.map set >> calculate)
 
 let solution (input: string seq) =
     { Part1 = part1 input |> string

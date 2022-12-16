@@ -20,8 +20,6 @@ let maybe = new MaybeBuilder()
 
 let flip f a b = f b a
 
-let tupleMap f (a, b) = (f a, f b)
-
 let next s value =
     let index = Seq.findIndex (fun v -> v = value) s
 
@@ -30,7 +28,7 @@ let next s value =
     else
         Seq.item (index + 1) s
 
-let endsToTuple sequence = (Seq.head sequence, Seq.last sequence)
+let seqToTuple sequence = (Seq.head sequence, Seq.last sequence)
 
 let split chars (s: string) = s.Split(chars)
 
@@ -52,7 +50,7 @@ let unpack f (a, b) = f a b
 
 let notEqualTo value = ((<>) value)
 
-let tupleMap2 f f2 (a, b) = (f a, f2 b)
+let tupleMap f f2 (a, b) = (f a, f2 b)
 
 let isnt f = f >> not
 

@@ -46,9 +46,10 @@ module Day4
 
 open Utility
 
-let chunk seperator = split seperator >> endsToTuple
+let chunk seperator = split seperator >> seqToTuple
+let spreader f = tupleMap f f
 
-let stringToPairs = chunk [| ',' |] >> tupleMap (chunk [| '-' |] >> tupleMap int)
+let stringToPairs = chunk [| ',' |] >> spreader (chunk [| '-' |] >> spreader int)
 
 let isSubset =
     function

@@ -61,7 +61,7 @@ let part1: string seq -> int = Seq.fold folder [ 0 ] >> Seq.max
 *)
 
 let part2: string seq -> int =
-    Seq.fold folder [ 0 ] >> Seq.sort >> Seq.rev >> Seq.take 3 >> Seq.sum
+    Seq.fold folder [ 0 ] >> Seq.sortDescending >> Seq.take 3 >> Seq.sum
 
 let solution input =
     { Part1 = part1 input |> string
