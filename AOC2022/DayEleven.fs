@@ -5,7 +5,7 @@ open System
 open System.Collections.Generic
 
 type Monkey =
-    { Items: int64 array
+    { Items: int64 list
       Op: char
       Const: int64 option
       Factor: int64
@@ -18,7 +18,7 @@ type Monkey =
 type MonkeyTracker = Dictionary<int, Monkey>
 
 let parseLine (chunk: string[]) =
-    { Items = chunk[1][18..] |> fun s -> s.Split(", ") |> Array.map int64
+    { Items = chunk[1][18..] |> fun s -> s.Split(", ") |> Array.map int64 |> Array.toList
       Op = chunk[2][23]
       Const = chunk[2][25..] |> fun s -> if fst (Int32.TryParse s) then Some(int s) else None
       Factor = chunk[3] |> splitByChars [| ' ' |] |> Array.last |> int64
@@ -37,14 +37,14 @@ let inspector worryOp (d: MonkeyTracker) k l =
     let k' = if l' % d[k].Factor = 0 then d[k].IfTrue else d[k].IfFalse
 
     d[k] <- { d[k] with Inspections = (d[k].Inspections) + 1L }
-    d[k] <- { d[k] with Items = Array.tail d[k].Items }
-    d[k'] <- { d[k'] with Items = Array.append d[k'].Items (Array.singleton l') }
+    d[k] <- { d[k] with Items = List.tail d[k].Items }
+    d[k'] <- { d[k'] with Items = d[k'].Items @ [ l' ] }
 
 let rec loop worryOp (dict: MonkeyTracker) =
     function
     | 0 -> dict
     | count ->
-        Seq.iter (fun key -> Array.iter (inspector worryOp dict key) dict[key].Items) dict.Keys
+        Seq.iter (fun key -> List.iter (inspector worryOp dict key) dict[key].Items) dict.Keys
         loop worryOp dict (dec count)
 
 let folder (dict: MonkeyTracker) (idx, monkey) =
@@ -52,20 +52,16 @@ let folder (dict: MonkeyTracker) (idx, monkey) =
     dict
 
 let parse mt =
-    Array.chunkBySize 7
-    >> Array.map parseLine
-    >> Array.indexed
-    >> Array.fold folder mt
+    Seq.chunkBySize 7 >> Seq.map parseLine >> Seq.indexed >> Seq.fold folder mt
 
 let solve cycles worryOp =
     parse (new MonkeyTracker())
     >> flip (loop worryOp) cycles
     >> fun dict -> dict.Values
     >> Seq.map (fun m -> m.Inspections)
-    >> Array.ofSeq
-    >> Array.sortDescending
-    >> Array.truncate 2
-    >> Array.fold (*) 1L
+    >> Seq.sortDescending
+    >> Seq.truncate 2
+    >> Seq.fold (*) 1L
 
 let worryOp1 _ = flip (/) 3L
 
