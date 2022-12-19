@@ -18,7 +18,7 @@ type Monkey =
 type MonkeyTracker = Dictionary<int, Monkey>
 
 let parseLine (chunk: string[]) =
-    { Items = chunk[1][18..] |> fun s -> s.Split(", ") |> Array.map int64 |> Array.toList
+    { Items = chunk[1][18..] |> fun s -> splitByString ", " |> Seq.toList |> Seq.map int64
       Op = chunk[2][23]
       Const = chunk[2][25..] |> fun s -> if fst (Int32.TryParse s) then Some(int s) else None
       Factor = chunk[3] |> splitByChars [| ' ' |] |> Array.last |> int64
