@@ -1,6 +1,9 @@
 module Utility
 
 open System.IO
+open FParsec
+open FParsec.Pipes
+open FSharpx.Collections
 
 type Solution = { Part1: string; Part2: string }
 type SolutionBuilder = string seq -> Solution
@@ -49,6 +52,8 @@ let rec trimEnds sequence =
 
 let unpack f (a, b) = f a b
 
+let pack f a b = f (a, b)
+
 let notEqualTo value = ((<>) value)
 
 let tupleMap f f2 (a, b) = (f a, f2 b)
@@ -83,3 +88,15 @@ let getInput dayNumber =
         Some(File.ReadAllLines fileName |> trimEnds)
     else
         None
+
+let integerParser: Parser<int, unit> =
+    %% +.(qty.[1..] * digit)
+    -|> (ResizeArray.toArray >> System.String >> System.Int32.Parse)
+
+let parserResultToOption =
+    function
+    | Success(value, _, _) -> Some value
+    | _ -> None
+
+let indexFromOne (s: 'a seq) =
+    s |> Seq.indexed |> Seq.map (tupleMap inc id)
