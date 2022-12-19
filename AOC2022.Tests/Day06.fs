@@ -1,11 +1,11 @@
-module DaySixTests
+module Day06Tests
 
 open Xunit
 open Utility
 
 let solution =
-    match getInput 11 with
-    | Some input -> Day11.solution input
+    match getInput 6 with
+    | Some input -> Day06.solution input
     | _ -> failwith "Input cannot be found"
 
 [<Theory>]
@@ -15,7 +15,7 @@ let solution =
 [<InlineData("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "10")>]
 [<InlineData("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", "11")>]
 let ``Part 1`` (input, expected) =
-    Assert.Equal(expected, Day6.part1 (Seq.singleton input))
+    Assert.Equal(expected, Day06.part1 (Seq.singleton input))
 
 // [<Fact>]
 [<Theory>]
@@ -25,4 +25,4 @@ let ``Part 1`` (input, expected) =
 [<InlineData("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "29")>]
 [<InlineData("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", "26")>]
 let ``Part 2`` (input, expected) =
-    Assert.Equal(expected, Day6.part2 (Seq.singleton input))
+    Assert.Equal(expected, Day06.part2 (Seq.singleton input))

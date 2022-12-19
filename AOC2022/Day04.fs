@@ -42,7 +42,7 @@ In how many assignment pairs does one range fully contain the other?
 
 *)
 
-module Day4
+module Day04
 
 open Utility
 

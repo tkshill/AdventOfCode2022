@@ -1,11 +1,11 @@
-module DayEightTests
+module Day08Tests
 
 open Xunit
 open Utility
 
 let solution =
-    match getInput 11 with
-    | Some input -> Day11.solution input
+    match getInput 8 with
+    | Some input -> Day08.solution input
     | _ -> failwith "Input cannot be found"
 
 [<Fact>]

@@ -1,11 +1,11 @@
-module DayFourTests
+module Day04Tests
 
 open Xunit
 open Utility
 
 let solution =
-    match getInput 11 with
-    | Some input -> Day11.solution input
+    match getInput 4 with
+    | Some input -> Day04.solution input
     | _ -> failwith "Input cannot be found"
 
 [<Theory>]
@@ -20,7 +20,7 @@ let solution =
 [<InlineData("11-94,93-98", "0")>]
 [<InlineData("40-92,3-91", "0")>]
 let ``Part 1 tests for individual lines`` (data, expected) =
-    Assert.Equal(expected, Day4.part1 (Seq.singleton data))
+    Assert.Equal(expected, Day04.part1 (Seq.singleton data))
 
 [<Fact>]
 let ``Part 1`` () = Assert.Equal("2", solution.Part1)
@@ -33,7 +33,7 @@ let ``Part 1`` () = Assert.Equal("2", solution.Part1)
 [<InlineData("6-6,4-6", true)>]
 [<InlineData("2-6,4-8", true)>]
 let ``Part 2 tests for individual lines`` (data, expected) =
-    Assert.Equal(expected, Day4.isOverlap (Day4.stringToPairs data))
+    Assert.Equal(expected, Day04.isOverlap (Day04.stringToPairs data))
 
 [<Fact>]
 let ``Part 2`` () = Assert.Equal("4", solution.Part2)

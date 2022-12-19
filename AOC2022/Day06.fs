@@ -31,7 +31,7 @@ How many characters need to be processed before the first start-of-packet marker
 
 *)
 
-module Day6
+module Day06
 
 open Utility
 

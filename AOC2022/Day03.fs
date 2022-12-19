@@ -32,7 +32,7 @@ Find the item type that appears in both compartments of each rucksack. What is t
 
 *)
 
-module Day3
+module Day03
 
 open Utility
 

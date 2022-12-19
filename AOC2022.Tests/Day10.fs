@@ -1,4 +1,4 @@
-module DayTenTests
+module Day10Tests
 
 open Xunit
 open Utility

@@ -1,18 +1,16 @@
-﻿open System.IO
-open System.Net.Http
-open Utility
+﻿open Utility
 
 let getSolution input : string -> Solution option =
     function
-    | "1" -> Some(Day1.solution input)
-    | "2" -> Some(Day2.solution input)
-    | "3" -> Some(Day3.solution input)
-    | "4" -> Some(Day4.solution input)
-    | "5" -> Some(Day5.solution input)
-    | "6" -> Some(Day6.solution input)
-    | "7" -> Some(Day7.solution input)
-    | "8" -> Some(Day8.solution input)
-    | "9" -> Some(Day9.solution input)
+    | "1" -> Some(Day01.solution input)
+    | "2" -> Some(Day02.solution input)
+    | "3" -> Some(Day03.solution input)
+    | "4" -> Some(Day04.solution input)
+    | "5" -> Some(Day05.solution input)
+    | "6" -> Some(Day06.solution input)
+    | "7" -> Some(Day07.solution input)
+    | "8" -> Some(Day08.solution input)
+    | "9" -> Some(Day09.solution input)
     | "10" -> Some(Day10.solution input)
     | "11" -> Some(Day11.solution input)
     | _ -> None

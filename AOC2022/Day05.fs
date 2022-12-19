@@ -51,7 +51,7 @@ The Elves just need to know which crate will end up on top of each stack; in thi
 After the rearrangement procedure completes, what crate ends up on top of each stack?
 *)
 
-module Day5
+module Day05
 
 open System
 open Utility

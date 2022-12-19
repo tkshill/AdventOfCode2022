@@ -27,7 +27,7 @@ In this example, if you were to follow the strategy guide, you would get a total
 What would your total score be if everything goes exactly according to your strategy guide?
 *)
 
-module Day2
+module Day02
 
 open Utility
 

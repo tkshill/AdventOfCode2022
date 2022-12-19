@@ -76,7 +76,7 @@ Find all of the directories with a total size of at most 100000. What is the sum
 
 *)
 
-module Day7
+module Day07
 
 open Utility
 
