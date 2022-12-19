@@ -1,9 +1,9 @@
 module Day11
 
 open Utility
-open System
 open System.Collections.Generic
 
+[<Struct>]
 type Monkey =
     { Items: int64 list
       Op: char
@@ -14,17 +14,19 @@ type Monkey =
       Inspections: int64 }
 
     static member factor(m: Monkey) = m.Factor
+    static member inspections(m: Monkey) = m.Inspections
 
 type MonkeyTracker = Dictionary<int, Monkey>
+let values (dict: Dictionary<'a, 'b>) = dict.Values
 
 let parseLine (chunk: string[]) =
-    { Items = chunk[1][18..] |> fun s -> splitByString ", " |> Seq.toList |> Seq.map int64
+    { Items = chunk[1][18..] |> splitByString ", " |> Array.toList |> List.map int64
       Op = chunk[2][23]
-      Const = chunk[2][25..] |> fun s -> if fst (Int32.TryParse s) then Some(int s) else None
+      Const = chunk[2][25..] |> fun s -> if s = "old" then None else Some(int64 s)
       Factor = chunk[3] |> splitByChars [| ' ' |] |> Array.last |> int64
       IfTrue = chunk[4] |> splitByChars [| ' ' |] |> Array.last |> int
       IfFalse = chunk[5] |> splitByChars [| ' ' |] |> Array.last |> int
-      Inspections = 0 }
+      Inspections = 0L }
 
 let calculateWorry (worryOp: MonkeyTracker -> int64 -> int64) (d: MonkeyTracker) k l =
     match (d[k].Op, d[k].Const) with
@@ -57,8 +59,8 @@ let parse mt =
 let solve cycles worryOp =
     parse (new MonkeyTracker())
     >> flip (loop worryOp) cycles
-    >> fun dict -> dict.Values
-    >> Seq.map (fun m -> m.Inspections)
+    >> values
+    >> Seq.map Monkey.inspections
     >> Seq.sortDescending
     >> Seq.truncate 2
     >> Seq.fold (*) 1L
@@ -67,8 +69,7 @@ let worryOp1 _ = flip (/) 3L
 
 let part1: string array -> int64 = solve 20 worryOp1
 
-let worryOp2 (mt: MonkeyTracker) =
-    mt.Values |> Seq.map Monkey.factor |> Seq.reduce (*) |> flip (%)
+let worryOp2 = values >> Seq.map Monkey.factor >> Seq.reduce (*) >> flip (%)
 
 let part2: string array -> int64 = solve 10000 worryOp2
 
