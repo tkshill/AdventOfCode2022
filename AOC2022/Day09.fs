@@ -2,6 +2,51 @@ module Day09
 
 open Utility
 
+let surrounding (x, y) =
+    [ (dec x, y)
+      (x, dec y)
+      (inc x, y)
+      (x, inc y)
+      (dec x, dec y)
+      (inc x, inc y)
+      (dec x, inc y)
+      (inc x, dec y) ]
+
+let expand =
+    Seq.map (splitByChars [| ' ' |] >> seqToTuple >> tupleMap id int)
+    >> Seq.collect (unpack (flip Seq.replicate))
+
+let move (x, y) =
+    function
+    | "R" -> (inc x, y)
+    | "L" -> (dec x, y)
+    | "U" -> (x, inc y)
+    | "D" -> (x, dec y)
+
+let findNextTail headSurroundings tailSurroundings =
+    Seq.find ((=) >> (flip Seq.exists) tailSurroundings) headSurroundings
+
+let scanner tail =
+    function
+    | head when head = tail || Seq.contains head (surrounding tail) -> tail
+    | head -> findNextTail (surrounding head) (surrounding tail)
+
+let rec recur knotPath =
+    function
+    | 0 -> Seq.length (set knotPath)
+    | count -> recur (Seq.scan scanner (0, 0) knotPath) (dec count)
+
+let solve iterations =
+    expand >> Seq.scan move (0, 0) >> (flip recur) iterations
+
+let part1: string seq -> int = solve 1
+
+let part2: string seq -> int = solve 9
+
+let solution input =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
     --- Day 9: Rope Bridge ---
 This rope bridge creaks as you walk along it. You aren't sure how old it is, or whether it can even support your weight.
@@ -246,50 +291,6 @@ Simulate your complete hypothetical series of motions. How many currentitions do
 
 *)
 
-let surrounding (x, y) =
-    [ (dec x, y)
-      (x, dec y)
-      (inc x, y)
-      (x, inc y)
-      (dec x, dec y)
-      (inc x, inc y)
-      (dec x, inc y)
-      (inc x, dec y) ]
-
-let expand =
-    Seq.map (splitByChars [| ' ' |] >> seqToTuple >> tupleMap id int)
-    >> Seq.collect (unpack (flip Seq.replicate))
-
-let move (x, y) =
-    function
-    | "R" -> (inc x, y)
-    | "L" -> (dec x, y)
-    | "U" -> (x, inc y)
-    | "D" -> (x, dec y)
-
-let findNextTail headSurroundings tailSurroundings =
-    Seq.find ((=) >> (flip Seq.exists) tailSurroundings) headSurroundings
-
-let scanner tail =
-    function
-    | head when head = tail || Seq.contains head (surrounding tail) -> tail
-    | head -> findNextTail (surrounding head) (surrounding tail)
-
-let rec recur knotPath =
-    function
-    | 0 -> Seq.length (set knotPath)
-    | count -> recur (Seq.scan scanner (0, 0) knotPath) (dec count)
-
-let solve iterations =
-    expand >> Seq.scan move (0, 0) >> (flip recur) iterations
-
-let part1: string seq -> int = solve 1
-
-let part2: string seq -> int = solve 9
-
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
 
 (*
     --- Part Two ---

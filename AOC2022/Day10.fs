@@ -1,3 +1,37 @@
+module Day10
+
+open Utility
+
+let parse =
+    function
+    | "noop" -> Seq.singleton 0
+    | addx -> addx |> splitByChars [| ' ' |] |> Seq.last |> (fun n -> Seq.ofList [ 0; int n ])
+
+let enumerate = Seq.collect parse >> Seq.scan (+) 1 >> Seq.indexed
+
+let part1: string seq -> int =
+    enumerate
+    >> Seq.map (tupleMap inc id)
+    >> Seq.filter (fst >> fun idx -> (idx % 40) = 20 && idx <= 220)
+    >> Seq.sumBy (unpack (*))
+
+let pixelate =
+    function
+    | idx, middle when Seq.exists ((=) (idx % 40)) [ dec middle; middle; inc middle ] -> "#"
+    | _ -> "."
+
+let part2: string seq -> string =
+    enumerate
+    >> Seq.map pixelate
+    >> Seq.chunkBySize 40
+    >> Seq.truncate 6
+    >> Seq.map (String.concat "")
+    >> String.concat "\n"
+
+let solution input =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
 
   --- Day 10: Cathode-Ray Tube ---
@@ -192,39 +226,7 @@ Find the signal strength during the 20th, 60th, 100th, 140th, 180th, and 220th c
 
 *)
 
-module Day10
 
-open Utility
-
-let parse =
-    function
-    | "noop" -> Seq.singleton 0
-    | addx -> addx |> splitByChars [| ' ' |] |> Seq.last |> (fun n -> Seq.ofList [ 0; int n ])
-
-let enumerate = Seq.collect parse >> Seq.scan (+) 1 >> Seq.indexed
-
-let part1: string seq -> int =
-    enumerate
-    >> Seq.map (tupleMap inc id)
-    >> Seq.filter (fst >> fun idx -> (idx % 40) = 20 && idx <= 220)
-    >> Seq.sumBy (unpack (*))
-
-let pixelate =
-    function
-    | idx, middle when Seq.exists ((=) (idx % 40)) [ dec middle; middle; inc middle ] -> "#"
-    | _ -> "."
-
-let part2: string seq -> string =
-    enumerate
-    >> Seq.map pixelate
-    >> Seq.chunkBySize 40
-    >> Seq.truncate 6
-    >> Seq.map (String.concat "")
-    >> String.concat "\n"
-
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
 
 (*
   --- Part Two ---

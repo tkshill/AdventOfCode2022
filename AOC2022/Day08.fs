@@ -2,6 +2,35 @@ module Day08
 
 open Utility
 
+let v = Array.rev
+
+let adjacents (a: char[,]) r c =
+    [ v a[.. (r - 1), c]; a[(r + 1) .., c]; v a[r, .. (c - 1)]; a[r, (c + 1) ..] ]
+
+let isVisible (grid: char[,]) row col value =
+    adjacents grid row col |> Seq.exists (Seq.forall ((>) value))
+
+let part1 input =
+    let grid = array2D input
+    grid |> Array2D.mapi (isVisible grid) |> seqFrom2D |> Seq.sumBy boolToInt
+
+let rec takeWhileInc count cond =
+    function
+    | [||] -> count
+    | x when cond (Array.head x) = false -> inc count
+    | x -> takeWhileInc (inc count) cond (Array.tail x)
+
+let scenicScore (grid: char[,]) r c value =
+    adjacents grid r c |> Seq.map (takeWhileInc 0 ((>) value)) |> Seq.reduce (*)
+
+let part2 input =
+    let grid = array2D input
+    grid |> Array2D.mapi (scenicScore grid) |> seqFrom2D |> Seq.max
+
+let solution input =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
     --- Day 8: Treetop Tree House ---
 The expedition comes across a peculiar patch of tall trees all planted carefully in a grid. The Elves explain that a previous expedition planted these trees as a reforestation effort. Now, they're curious if this would be a good location for a tree house.
@@ -34,17 +63,6 @@ Consider your map; how many trees are visible from outside the grid?
 
 *)
 
-let v = Array.rev
-
-let adjacents (a: char[,]) r c =
-    [ v a[.. (r - 1), c]; a[(r + 1) .., c]; v a[r, .. (c - 1)]; a[r, (c + 1) ..] ]
-
-let isVisible (grid: char[,]) row col value =
-    adjacents grid row col |> Seq.exists (Seq.forall ((>) value))
-
-let part1 input =
-    let grid = array2D input
-    grid |> Array2D.mapi (isVisible grid) |> seqFrom2D |> Seq.sumBy boolToInt
 
 (*
     Content with the amount of tree cover available, the Elves just need to know the best spot to build their tree house: they would like to be able to see a lot of trees.
@@ -82,20 +100,3 @@ This tree's scenic score is 8 (2 * 2 * 1 * 2); this is the ideal spot for the tr
 Consider each tree on your map. What is the highest scenic score possible for any tree?
 
 *)
-
-let rec takeWhileInc count cond =
-    function
-    | [||] -> count
-    | x when cond (Array.head x) = false -> inc count
-    | x -> takeWhileInc (inc count) cond (Array.tail x)
-
-let scenicScore (grid: char[,]) r c value =
-    adjacents grid r c |> Seq.map (takeWhileInc 0 ((>) value)) |> Seq.reduce (*)
-
-let part2 input =
-    let grid = array2D input
-    grid |> Array2D.mapi (scenicScore grid) |> seqFrom2D |> Seq.max
-
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }

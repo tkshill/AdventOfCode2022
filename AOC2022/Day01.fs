@@ -1,3 +1,21 @@
+module Day01
+
+open Utility
+
+let folder (head :: tail) =
+    function
+    | "" -> 0 :: head :: tail
+    | line -> (int line + head) :: tail
+
+let part1: string seq -> int = Seq.fold folder [ 0 ] >> Seq.max
+
+let part2: string seq -> int =
+    Seq.fold folder [ 0 ] >> Seq.sortDescending >> Seq.take 3 >> Seq.sum
+
+let solution input =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (* 
     --- Day 1: Calorie Counting ---
     Santa's reindeer typically eat regular reindeer food, but they need a lot of magical energy to deliver presents on Christmas. For that, their favorite snack is a special type of star fruit that only grows deep in the jungle. The Elves have brought you on their annual expedition to the grove where the fruit grows.
@@ -39,17 +57,6 @@
     Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
 *)
 
-module Day01
-
-open Utility
-
-let folder (head :: tail) =
-    function
-    | "" -> 0 :: head :: tail
-    | line -> (int line + head) :: tail
-
-let part1: string seq -> int = Seq.fold folder [ 0 ] >> Seq.max
-
 (*
     By the time you calculate the answer to the Elves' question, they've already realized that the Elf carrying the most Calories of food might eventually run out of snacks.
 
@@ -59,10 +66,3 @@ let part1: string seq -> int = Seq.fold folder [ 0 ] >> Seq.max
 
     Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
 *)
-
-let part2: string seq -> int =
-    Seq.fold folder [ 0 ] >> Seq.sortDescending >> Seq.take 3 >> Seq.sum
-
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }

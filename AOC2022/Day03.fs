@@ -1,3 +1,22 @@
+module Day03
+
+open Utility
+
+let offset =
+    function
+    | ch when ch > 96 -> ch - 96
+    | ch -> ch - 38
+
+let calculate = Set.intersectMany >> Seq.head >> int >> offset
+
+let part1 = Seq.sumBy (Seq.splitInto 2 >> Seq.map set >> calculate)
+
+let part2 = Seq.chunkBySize 3 >> Seq.sumBy (Seq.map set >> calculate)
+
+let solution (input: string seq) =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
     --- Day 3: Rucksack Reorganization ---
 One Elf has the important job of loading all of the rucksacks with supplies for the jungle journey. Unfortunately, that Elf didn't quite follow the packing instructions, and so a few items now need to be rearranged.
@@ -32,19 +51,6 @@ Find the item type that appears in both compartments of each rucksack. What is t
 
 *)
 
-module Day03
-
-open Utility
-
-let offset =
-    function
-    | ch when ch > 96 -> ch - 96
-    | ch -> ch - 38
-
-let calculate = Set.intersectMany >> Seq.head >> int >> offset
-
-let part1 = Seq.sumBy (Seq.splitInto 2 >> Seq.map set >> calculate)
-
 (*
     --- Part Two ---
 As you finish identifying the misplaced items, the Elves come to you with another issue.
@@ -71,9 +77,3 @@ Priorities for these items must still be found to organize the sticker attachmen
 
 Find the item type that corresponds to the badges of each three-Elf group. What is the sum of the priorities of those item types?
 *)
-
-let part2 = Seq.chunkBySize 3 >> Seq.sumBy (Seq.map set >> calculate)
-
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }

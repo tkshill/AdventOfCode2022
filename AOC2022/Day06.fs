@@ -1,3 +1,22 @@
+module Day06
+
+open Utility
+
+// this assumes there's an answer to be found
+let rec counter limit count cache (head :: tail) =
+    match cache with
+    | x when Set.count (set x) = limit -> count
+    | x when List.length x = limit -> counter limit (count + 1) (head :: List.dropLast x) tail
+    | _ -> counter limit (count + 1) (head :: cache) tail
+
+let part1 = Seq.head >> Seq.toList >> counter 4 0 List.Empty
+
+let part2 = Seq.head >> Seq.toList >> counter 14 0 List.Empty
+
+let solution (input: string seq) =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
   --- Day 6: Tuning Trouble ---
 The preparations are finally complete; you and the Elves leave camp on foot and begin to make your way toward the star fruit grove.
@@ -31,19 +50,6 @@ How many characters need to be processed before the first start-of-packet marker
 
 *)
 
-module Day06
-
-open Utility
-
-// this assumes there's an answer to be found
-let rec counter limit count cache (head :: tail) =
-    match cache with
-    | x when Set.count (set x) = limit -> count
-    | x when List.length x = limit -> counter limit (count + 1) (head :: List.dropLast x) tail
-    | _ -> counter limit (count + 1) (head :: cache) tail
-
-let part1 = Seq.head >> Seq.toList >> counter 4 0 List.Empty
-
 (*
   --- Part Two ---
 Your device's communication system is correctly detecting packets, but still isn't working. It looks like it also needs to look for messages.
@@ -60,9 +66,3 @@ zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw: first marker after character 26
 How many characters need to be processed before the first start-of-message marker is detected?
 
 *)
-
-let part2 = Seq.head >> Seq.toList >> counter 14 0 List.Empty
-
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }

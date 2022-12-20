@@ -1,3 +1,89 @@
+module Day07
+
+open Utility
+
+let (|Prefix|_|) (p: string) (s: string) =
+    match s.StartsWith(p) with
+    | true -> Some(s.Substring(p.Length))
+    | false -> None
+
+type FileSystemItem =
+    | File of File
+    | Directory of Directory
+
+and File = { Name: string; Size: int }
+
+and Directory =
+    { Name: string
+      Items: FileSystemItem list }
+
+let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
+    function
+    | Prefix "$ cd " name when name = "/" -> ReturnHome
+    | Prefix "$ cd " name when name = ".." -> MoveUp
+    | Prefix "$ cd " name -> MakeDirectory name
+    | Prefix "dir " _
+    | "$ ls" -> Skip
+    | file -> MakeFile(file.Split([| ' ' |]) |> seqToTuple |> tupleMap int id)
+
+let mutable commands: string list = []
+
+let rec build (dir: Directory) =
+    function
+    | Skip -> advance dir
+    | ReturnHome when dir.Name = "/" -> advance dir
+    | ReturnHome
+    | MoveUp -> dir
+    | MakeFile(size, name) -> advance { dir with Items = (File { Name = name; Size = size } :: dir.Items) }
+    | MakeDirectory name ->
+        advance { dir with Items = (Directory(advance { Name = name; Items = List.Empty })) :: dir.Items }
+
+and advance dir =
+    match commands with
+    | [] -> dir
+    | head :: tail ->
+        commands <- tail
+        build dir head
+
+let mutable part1sum = 0
+
+let rec size sideEffect =
+    function
+    | File file -> file.Size
+    | Directory dir ->
+        let total = List.sumBy (size sideEffect) dir.Items
+        sideEffect total
+        total
+
+let under100k x =
+    if x < 100000 then part1sum <- part1sum + x else ()
+
+let toFileSystemItem () =
+    { Name = "/"; Items = [] } |> advance |> Directory
+
+let part1 input =
+    commands <- Seq.toList input
+
+    toFileSystemItem () |> (size under100k) |> ignore
+
+    part1sum
+
+let mutable directorySizes: int list = []
+
+let collectSizes size =
+    directorySizes <- size :: directorySizes
+
+let part2 input =
+    commands <- Seq.toList input
+
+    let total = toFileSystemItem () |> size collectSizes
+
+    directorySizes |> List.filter ((<=) (total - 40000000)) |> List.min
+
+let solution input =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
     --- Day 7: No Space Left On Device ---
 You can hear birds chirping and raindrops hitting leaves as the expedition proceeds. Occasionally, you can even hear much louder sounds in the distance; how big do the animals get out here, anyway?
@@ -76,75 +162,6 @@ Find all of the directories with a total size of at most 100000. What is the sum
 
 *)
 
-module Day07
-
-open Utility
-
-let (|Prefix|_|) (p: string) (s: string) =
-    match s.StartsWith(p) with
-    | true -> Some(s.Substring(p.Length))
-    | false -> None
-
-type FileSystemItem =
-    | File of File
-    | Directory of Directory
-
-and File = { Name: string; Size: int }
-
-and Directory =
-    { Name: string
-      Items: FileSystemItem list }
-
-let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
-    function
-    | Prefix "$ cd " name when name = "/" -> ReturnHome
-    | Prefix "$ cd " name when name = ".." -> MoveUp
-    | Prefix "$ cd " name -> MakeDirectory name
-    | Prefix "dir " _
-    | "$ ls" -> Skip
-    | file -> MakeFile(file.Split([| ' ' |]) |> seqToTuple |> tupleMap int id)
-
-let mutable commands: string list = []
-
-let rec build (dir: Directory) =
-    function
-    | Skip -> advance dir
-    | ReturnHome when dir.Name = "/" -> advance dir
-    | ReturnHome
-    | MoveUp -> dir
-    | MakeFile(size, name) -> advance { dir with Items = (File { Name = name; Size = size } :: dir.Items) }
-    | MakeDirectory name ->
-        advance { dir with Items = (Directory(advance { Name = name; Items = List.Empty })) :: dir.Items }
-
-and advance dir =
-    match commands with
-    | [] -> dir
-    | head :: tail ->
-        commands <- tail
-        build dir head
-
-let mutable part1sum = 0
-
-let rec size sideEffect =
-    function
-    | File file -> file.Size
-    | Directory dir ->
-        let total = List.sumBy (size sideEffect) dir.Items
-        sideEffect total
-        total
-
-let under100k x =
-    if x < 100000 then part1sum <- part1sum + x else ()
-
-let toFileSystemItem () =
-    { Name = "/"; Items = [] } |> advance |> Directory
-
-let part1 input =
-    commands <- Seq.toList input
-
-    toFileSystemItem () |> (size under100k) |> ignore
-
-    part1sum
 
 (*
     --- Part Two ---
@@ -165,19 +182,3 @@ Directories e and a are both too small; deleting them would not free up enough s
 Find the smallest directory that, if deleted, would free up enough space on the filesystem to run the update. What is the total size of that directory?
 
 *)
-
-let mutable directorySizes: int list = []
-
-let collectSizes size =
-    directorySizes <- size :: directorySizes
-
-let part2 input =
-    commands <- Seq.toList input
-
-    let total = toFileSystemItem () |> size collectSizes
-
-    directorySizes |> List.filter ((<=) (total - 40000000)) |> List.min
-
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }

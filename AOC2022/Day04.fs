@@ -1,3 +1,31 @@
+module Day04
+
+open Utility
+
+let chunk seperator = splitByChars seperator >> seqToTuple
+let spreader f = tupleMap f f
+
+let stringToPairs = chunk [| ',' |] >> spreader (chunk [| '-' |] >> spreader int)
+
+let isSubset =
+    function
+    | (l, r), (l2, r2) when l2 >= l && r2 <= r -> 1
+    | (l, r), (l2, r2) when l2 <= l && r2 >= r -> 1
+    | _ -> 0
+
+let part1 = Seq.sumBy (stringToPairs >> isSubset)
+
+let isOverlap ((l, r), (l2, r2)) =
+    match Set.intersect (set { l..r }) (set { l2..r2 }) with
+    | x when x = Set.empty -> 0
+    | _ -> 1
+
+let part2 = Seq.sumBy (stringToPairs >> isOverlap)
+
+let solution (input: string seq) =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
     --- Day 4: Camp Cleanup ---
 Space needs to be cleared before the last supplies can be unloaded from the ships, and so several Elves have been assigned the job of cleaning up sections of the camp. Every section has a unique ID number, and each Elf is assigned a range of section IDs.
@@ -42,23 +70,6 @@ In how many assignment pairs does one range fully contain the other?
 
 *)
 
-module Day04
-
-open Utility
-
-let chunk seperator = splitByChars seperator >> seqToTuple
-let spreader f = tupleMap f f
-
-let stringToPairs = chunk [| ',' |] >> spreader (chunk [| '-' |] >> spreader int)
-
-let isSubset =
-    function
-    | (l, r), (l2, r2) when l2 >= l && r2 <= r -> 1
-    | (l, r), (l2, r2) when l2 <= l && r2 >= r -> 1
-    | _ -> 0
-
-let part1 = Seq.sumBy (stringToPairs >> isSubset)
-
 (*
     --- Part Two ---
 It seems like there is still quite a bit of duplicate work planned. Instead, the Elves would like to know the number of pairs that overlap at all.
@@ -73,14 +84,3 @@ So, in this example, the number of overlapping assignment pairs is 4.
 
 In how many assignment pairs do the ranges overlap?
 *)
-
-let isOverlap ((l, r), (l2, r2)) =
-    match Set.intersect (set { l..r }) (set { l2..r2 }) with
-    | x when x = Set.empty -> 0
-    | _ -> 1
-
-let part2 = Seq.sumBy (stringToPairs >> isOverlap)
-
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }

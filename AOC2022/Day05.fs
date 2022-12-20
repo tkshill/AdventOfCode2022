@@ -1,3 +1,57 @@
+module Day05
+
+open Utility
+
+type State = char array array
+
+let parseCrates =
+    dropLast
+    >> Seq.transpose // spin baby, spin
+    >> Seq.indexed // get the keys
+    >> Seq.filter (fst >> (fun key -> key % 4 = 1)) // the numbers are 4 characters apart
+    >> Seq.map (snd >> Seq.filter (notEqualTo ' ') >> Seq.toArray) // filter out empty spaces
+    >> Seq.toArray // Arrays cuz we're gonna be mutating by index
+
+let parseProcedure =
+    splitByString "movefromto []" // split on non number chars
+    >> Seq.filter (notEqualTo "") // remove empty strings
+    >> Seq.map int // make em ints!
+    >> Seq.toList // lists for deconstruction
+
+// more filtering empty values because meh.
+let parseProcedures = Seq.map parseProcedure >> (Seq.filter (isnt Seq.isEmpty))
+
+let startsWithM =
+    Seq.tryHead >> Option.map (notEqualTo 'm') >> Option.defaultValue false
+
+let parseInput =
+    // split on first line that starts with 'm'
+    splitBy startsWithM >> tupleMap parseCrates parseProcedures
+
+// REDUCERS
+let folder order (crates: State) (amt :: from :: to_ :: _) =
+    let cratesToMove = Array.take amt crates[from - 1] |> order
+
+    crates[from - 1] <- Array.skip amt crates[from - 1]
+    crates[to_ - 1] <- Array.append cratesToMove crates[to_ - 1]
+
+    crates
+
+// put it all together
+let solve order =
+    parseInput
+    >> unpack (Seq.fold (folder order))
+    >> Array.choose Array.tryHead
+    >> System.String
+
+let part1 = solve Array.rev
+
+let part2 = solve id
+
+let solution (input: string seq) =
+    { Part1 = part1 input |> string
+      Part2 = part2 input |> string }
+
 (*
     --- Day 5: Supply Stacks ---
 The expedition can depart as soon as the final supplies have been unloaded from the ships. Supplies are stored in stacks of marked crates, but because the needed supplies are buried under many other crates, the crates need to be rearranged.
@@ -51,56 +105,6 @@ The Elves just need to know which crate will end up on top of each stack; in thi
 After the rearrangement procedure completes, what crate ends up on top of each stack?
 *)
 
-module Day05
-
-open System
-open Utility
-
-type State = char array array
-
-let parseCrates =
-    dropLast
-    >> Seq.transpose // spin baby, spin
-    >> Seq.indexed // get the keys
-    >> Seq.filter (fst >> (fun key -> key % 4 = 1)) // the numbers are 4 characters apart
-    >> Seq.map (snd >> Seq.filter (notEqualTo ' ') >> Seq.toArray) // filter out empty spaces
-    >> Seq.toArray // Arrays cuz we're gonna be mutating by index
-
-let parseProcedure =
-    splitByString "movefromto []" // split on non number chars
-    >> Seq.filter (notEqualTo "") // remove empty strings
-    >> Seq.map int // make em ints!
-    >> Seq.toList // lists for deconstruction
-
-// more filtering empty values because meh.
-let parseProcedures = Seq.map parseProcedure >> (Seq.filter (isnt Seq.isEmpty))
-
-let startsWithM =
-    Seq.tryHead >> Option.map (notEqualTo 'm') >> Option.defaultValue false
-
-let parseInput =
-    // split on first line that starts with 'm'
-    splitBy startsWithM >> tupleMap parseCrates parseProcedures
-
-// REDUCERS
-let folder order (crates: State) (amt :: from :: to_ :: _) =
-    let cratesToMove = Array.take amt crates[from - 1] |> order
-
-    crates[from - 1] <- Array.skip amt crates[from - 1]
-    crates[to_ - 1] <- Array.append cratesToMove crates[to_ - 1]
-
-    crates
-
-// put it all together
-let solve order =
-    parseInput
-    >> unpack (Seq.fold (folder order))
-    >> Array.choose Array.tryHead
-    >> System.String
-
-let part1 = solve Array.rev
-
-
 (*
     --- Part Two ---
 As you watch the crane operator expertly rearrange the crates, you notice the process isn't following your prediction.
@@ -146,9 +150,3 @@ In this example, the CrateMover 9001 has put the crates in a totally different o
 
 Before the rearrangement process finishes, update your simulation so that the Elves know where they should stand to be ready to unload the final supplies. After the rearrangement procedure completes, what crate ends up on top of each stack?
 *)
-
-let part2 = solve id
-
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
