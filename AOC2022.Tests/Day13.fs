@@ -13,7 +13,7 @@ let ``Plumb tests`` () =
     let a = seq { "[1,1,3,1,1]" } |> Day13.parse |> Seq.head
     let b = seq { "[[1],[2,3,4]]" } |> Day13.parse |> Seq.head
 
-    Assert.True(Day13.plumb a b)
+    Assert.Equal(-1, Day13.plumb a b)
 
 [<Fact>]
 let ``Part 1`` () = Assert.Equal("13", solution.Part1)
