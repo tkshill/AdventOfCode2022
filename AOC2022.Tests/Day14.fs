@@ -10,3 +10,6 @@ let solution =
 
 [<Fact>]
 let ``Part 1`` () = Assert.Equal("24", solution.Part1)
+
+[<Fact>]
+let ``Part 2`` () = Assert.Equal("93", solution.Part2)

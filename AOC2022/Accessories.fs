@@ -108,3 +108,9 @@ let runParser parser = run parser >> parserResultToOption
 
 //     member this.say() =
 //         printfn "%A" $"{preString}{transformer (value)}{postString}"
+
+let withEffect (f: 'a -> unit) (v: 'a) =
+    f v
+    v
+
+let toTuple a b = a, b
