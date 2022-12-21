@@ -98,5 +98,13 @@ let parserResultToOption =
     | Success(value, _, _) -> Some value
     | _ -> None
 
-let indexFromOne (s: 'a seq) =
-    s |> Seq.indexed |> Seq.map (tupleMap inc id)
+let indexWithOffset (n: int) (s: 'a seq) =
+    s |> Seq.indexed |> Seq.map (tupleMap ((+) n) id)
+
+let runParser parser = run parser >> parserResultToOption
+
+// type Log'<'a>(value: 'a, ?transformer: 'a -> 'b, ?preString: string, ?postString: string) =
+//     do this.say(value, transformer, preString, postString)
+
+//     member this.say() =
+//         printfn "%A" $"{preString}{transformer (value)}{postString}"

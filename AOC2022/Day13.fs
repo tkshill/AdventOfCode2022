@@ -33,7 +33,7 @@ let parse = Seq.choose ((run lParser) >> parserResultToOption)
 let part1: string seq -> int =
     parse
     >> Seq.chunkBySize 2
-    >> indexFromOne
+    >> indexWithOffset 1
     >> Seq.filter (snd >> (fun pair -> pair = Array.sortWith plumb pair))
     >> Seq.sumBy fst
 
@@ -43,7 +43,7 @@ let part2: string array -> int =
     parse
     >> Seq.append additions
     >> Seq.sortWith plumb
-    >> indexFromOne
+    >> indexWithOffset 1
     >> Seq.filter (snd >> (=) >> flip Seq.exists additions)
     >> Seq.map fst
     >> Seq.reduce (*)
