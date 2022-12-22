@@ -46,15 +46,15 @@ let parseAndPass =
     >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread))
     >> set
     >> fun s -> Incomplete, s, [ (500, 0) ]
-    >> count 0
+    >> count -1
 
-let part1 = parseAndPass >> fst >> flip (-) 1
+let part1 = parseAndPass >> fst
 
 let actions (_, (_, s, _)) =
     depthLimit <- s |> Seq.maxBy snd |> snd |> ((+) 1)
     abyssalTransform <- fun (cavern, sand) -> Set.add (fst sand, depthLimit) cavern
     abyssCondition <- Incomplete
 
-let part2 = parseAndPass >> withEffect actions >> unpack count >> fst
+let part2 = parseAndPass >> withEffect actions >> unpack count >> fst >> flip (-) 1
 
 let solution = Solution.build (part1, part2)
