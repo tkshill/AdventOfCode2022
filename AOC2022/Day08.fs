@@ -4,24 +4,20 @@ open Utility
 
 let v = Array.rev
 
-let adjacents (a: char[,]) r c =
-    [ v a[.. (r - 1), c]; a[(r + 1) .., c]; v a[r, .. (c - 1)]; a[r, (c + 1) ..] ]
+let adjacents (a: char[,]) r c = [ v a[.. (r - 1), c]; a[(r + 1) .., c]; v a[r, .. (c - 1)]; a[r, (c + 1) ..] ]
 
-let isVisible (grid: char[,]) row col value =
-    adjacents grid row col |> Seq.exists (Seq.forall ((>) value))
+let isVisible (grid: char[,]) row col value = adjacents grid row col |> Seq.exists (Seq.forall ((>) value))
 
 let part1 input =
     let grid = array2D input
     grid |> Array2D.mapi (isVisible grid) |> seqFrom2D |> Seq.sumBy boolToInt
 
-let rec takeWhileInc count cond =
-    function
+let rec takeWhileInc count cond = function
     | [||] -> count
     | x when cond (Array.head x) = false -> inc count
     | x -> takeWhileInc (inc count) cond (Array.tail x)
 
-let scenicScore (grid: char[,]) r c value =
-    adjacents grid r c |> Seq.map (takeWhileInc 0 ((>) value)) |> Seq.reduce (*)
+let scenicScore (grid: char[,]) r c value = adjacents grid r c |> Seq.map (takeWhileInc 0 ((>) value)) |> Seq.reduce (*)
 
 let part2 input =
     let grid = array2D input
