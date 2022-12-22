@@ -2,82 +2,63 @@ module Day07
 
 open Utility
 
-let (|Prefix|_|) (p: string) (s: string) =
-    match s.StartsWith(p) with
-    | true -> Some(s.Substring(p.Length))
+let (|Prefix|_|) (p: string) (s: string) = match s.StartsWith(p) with
+    | true  -> Some(s.Substring(p.Length))
     | false -> None
 
-type FileSystemItem =
-    | File of File
-    | Directory of Directory
+type FileSystemItem = File of File | Directory of Directory
 
 and File = { Name: string; Size: int }
 
-and Directory =
-    { Name: string
-      Items: FileSystemItem list }
+and Directory = { Name: string; Items: FileSystemItem list }
 
-let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) =
-    function
-    | Prefix "$ cd " name when name = "/" -> ReturnHome
-    | Prefix "$ cd " name when name = ".." -> MoveUp
-    | Prefix "$ cd " name -> MakeDirectory name
+let (|MakeDirectory|MoveUp|MakeFile|Skip|ReturnHome|) = function
+    | Prefix "$ cd " name when name = "/"       -> ReturnHome
+    | Prefix "$ cd " name when name = ".."      -> MoveUp
+    | Prefix "$ cd " name                       -> MakeDirectory name
     | Prefix "dir " _
-    | "$ ls" -> Skip
-    | file -> MakeFile(file.Split([| ' ' |]) |> seqToTuple |> tupleMap int id)
+    | "$ ls"                                    -> Skip
+    | file                                      -> MakeFile(file.Split([| ' ' |]) |> seqToTuple |> tupleMap int id)
 
 let mutable commands: string list = []
 
-let rec build (dir: Directory) =
-    function
-    | Skip -> advance dir
-    | ReturnHome when dir.Name = "/" -> advance dir
+let rec build (dir: Directory) = function
+    | Skip                              -> advance dir
+    | ReturnHome when dir.Name = "/"    -> advance dir
     | ReturnHome
-    | MoveUp -> dir
-    | MakeFile(size, name) -> advance { dir with Items = (File { Name = name; Size = size } :: dir.Items) }
-    | MakeDirectory name ->
-        advance { dir with Items = (Directory(advance { Name = name; Items = List.Empty })) :: dir.Items }
+    | MoveUp                            -> dir
+    | MakeFile(size, name)              -> advance { dir with Items = (File { Name = name; Size = size } :: dir.Items) }
+    | MakeDirectory name                -> advance { dir with Items = (Directory(advance { Name = name; Items = List.Empty })) :: dir.Items }
 
-and advance dir =
-    match commands with
-    | [] -> dir
-    | head :: tail ->
-        commands <- tail
-        build dir head
+and advance dir = match commands with
+    | []            -> dir
+    | head :: tail  -> commands <- tail; build dir head
 
 let mutable part1sum = 0
 
-let rec size sideEffect =
-    function
-    | File file -> file.Size
+let rec size sideEffect = function
+    | File file     -> file.Size
     | Directory dir ->
         let total = List.sumBy (size sideEffect) dir.Items
         sideEffect total
         total
 
-let under100k x =
-    if x < 100000 then part1sum <- part1sum + x else ()
+let under100k x = if x < 100000 then part1sum <- part1sum + x else ()
 
-let toFileSystemItem () =
-    { Name = "/"; Items = [] } |> advance |> Directory
+let toFileSystemItem () = { Name = "/"; Items = [] } |> advance |> Directory
 
 let part1 input =
     commands <- Seq.toList input
-
     toFileSystemItem () |> (size under100k) |> ignore
-
     part1sum
 
 let mutable directorySizes: int list = []
 
-let collectSizes size =
-    directorySizes <- size :: directorySizes
+let collectSizes size = directorySizes <- size :: directorySizes
 
 let part2 input =
     commands <- Seq.toList input
-
     let total = toFileSystemItem () |> size collectSizes
-
     directorySizes |> List.filter ((<=) (total - 40000000)) |> List.min
 
 let solution = Solution.build (part1, part2)
