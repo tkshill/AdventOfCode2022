@@ -30,8 +30,8 @@ let rec dropGrain cavern = function
     | latest :: priors                                          -> dropGrain cavern (advanceGrain cavern latest :: latest :: priors)
 
 let rec count grainCount = function
-    | Complete, cavern, sandPath -> grainCount, (Incomplete, cavern, sandPath)
-    | Incomplete, cavern, sandPath -> count (inc grainCount) (dropGrain cavern sandPath)
+    | Complete  , cavern, sandPath  -> grainCount, (Incomplete, cavern, sandPath)
+    | Incomplete, cavern, sandPath  -> count (inc grainCount) (dropGrain cavern sandPath)
 
 let parseAndPass =
     Seq.choose (runParser pL)
