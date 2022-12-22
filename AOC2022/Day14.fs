@@ -9,8 +9,7 @@ let pT = %% +.pint32 -- ',' -- +.pint32 -%> auto
 
 let pL: Parser<(int * int) seq, unit> = %% +.(pT * (qty[0..] / " -> ")) -|> seq
 
-let spread (x, y) =
-    function
+let spread (x, y) = function
     | x2, _ when x <> x2 -> seq { for i in min x x2 .. max x x2 -> (i, y) }
     | _, y2 when y <> y2 -> seq { for i in min y y2 .. max y y2 -> (x, i) }
 
@@ -35,8 +34,8 @@ let rec count grainCount = function
 
 let parseAndPass =
     Seq.choose (runParser pL)
-    >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread)) >> set
-    >> fun cavern -> count -1 (Incomplete, cavern, [ (500, 0) ])
+    >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread))
+    >> fun cavern -> count -1 (Incomplete, set cavern, [ (500, 0) ])
 
 let part1 = parseAndPass >> fst
 
