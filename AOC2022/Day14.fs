@@ -41,9 +41,9 @@ let parseAndPass =
 let part1 = parseAndPass >> fst
 
 let actions (_, (_, cavern, _)) =
-    depthLimit <- (Seq.maxBy snd >> snd >> (+) 1) cavern
-    abyssalTransform <- fun (cavern, grain) -> Set.add (fst grain, depthLimit) cavern
-    abyssCondition <- Incomplete
+    depthLimit          <- (Seq.maxBy snd >> snd >> (+) 1) cavern
+    abyssalTransform    <- fun (cavern, grain) -> Set.add (fst grain, depthLimit) cavern
+    abyssCondition      <- Incomplete
 
 let part2 = parseAndPass >> withEffect actions >> unpack count >> fst >> flip (-) 1
 
