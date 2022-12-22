@@ -28,8 +28,7 @@ let parseLine (chunk: string[]) =
       IfFalse = chunk[5] |> splitByChars [| ' ' |] |> Array.last |> int
       Inspections = 0L }
 
-let calculateWorry (worryOp: MonkeyTracker -> int64 -> int64) (d: MonkeyTracker) k l =
-    match (d[k].Op, d[k].Const) with
+let calculateWorry (worryOp: MonkeyTracker -> int64 -> int64) (d: MonkeyTracker) k l = match (d[k].Op, d[k].Const) with
     | '*', Some v -> (worryOp d) (l * v)
     | '+', Some v -> (worryOp d) (l + v)
     | _ -> (worryOp d) (l * l)
@@ -42,28 +41,20 @@ let inspector worryOp (d: MonkeyTracker) k l =
     d[k] <- { d[k] with Items = List.tail d[k].Items }
     d[k'] <- { d[k'] with Items = d[k'].Items @ [ l' ] }
 
-let rec loop worryOp (dict: MonkeyTracker) =
-    function
+let rec loop worryOp (dict: MonkeyTracker) = function
     | 0 -> dict
     | count ->
         Seq.iter (fun key -> List.iter (inspector worryOp dict key) dict[key].Items) dict.Keys
         loop worryOp dict (dec count)
 
-let folder (dict: MonkeyTracker) (idx, monkey) =
-    dict.Add(idx, monkey)
-    dict
+let folder (dict: MonkeyTracker) (idx, monkey) = dict.Add(idx, monkey); dict
 
-let parse mt =
-    Seq.chunkBySize 7 >> Seq.map parseLine >> Seq.indexed >> Seq.fold folder mt
+let parse mt = Seq.chunkBySize 7 >> Seq.map parseLine >> Seq.indexed >> Seq.fold folder mt
 
 let solve cycles worryOp =
     parse (new MonkeyTracker())
-    >> flip (loop worryOp) cycles
-    >> values
-    >> Seq.map Monkey.inspections
-    >> Seq.sortDescending
-    >> Seq.truncate 2
-    >> Seq.fold (*) 1L
+    >> flip (loop worryOp) cycles >> values
+    >> Seq.map Monkey.inspections >> Seq.sortDescending >> Seq.truncate 2 >> Seq.fold (*) 1L
 
 let worryOp1 _ = flip (/) 3L
 
