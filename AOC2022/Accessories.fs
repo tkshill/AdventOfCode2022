@@ -1,3 +1,4 @@
+[<AutoOpen>]
 module Utility
 
 open System.IO
