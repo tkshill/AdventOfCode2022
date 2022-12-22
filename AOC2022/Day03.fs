@@ -2,10 +2,9 @@ module Day03
 
 open Utility
 
-let offset =
-    function
-    | ch when ch > 96 -> ch - 96
-    | ch -> ch - 38
+let offset = function
+    | ch when ch > 96   -> ch - 96
+    | ch                -> ch - 38
 
 let calculate = Set.intersectMany >> Seq.head >> int >> offset
 
