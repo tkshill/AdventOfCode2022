@@ -23,9 +23,9 @@ let advanceGrain cavern (x, y) =
     |> Option.defaultValue (x, y)
 
 let rec dropGrain cavern = function
-    | []                                                        -> Complete, cavern, []
-    | latest :: priors when goesAbyssal latest cavern           -> abyssCondition, abyssalTransform (cavern, latest), priors
-    | latest :: priors when advanceGrain cavern latest = latest -> Incomplete, Set.add latest cavern, priors
+    | []                                                        -> Complete         , cavern                            , []
+    | latest :: priors when goesAbyssal latest cavern           -> abyssCondition   , abyssalTransform (cavern, latest) , priors
+    | latest :: priors when advanceGrain cavern latest = latest -> Incomplete       , Set.add latest cavern             , priors
     | latest :: priors                                          -> dropGrain cavern (advanceGrain cavern latest :: latest :: priors)
 
 let rec count grainCount = function
