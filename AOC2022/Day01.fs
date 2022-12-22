@@ -2,15 +2,13 @@ module Day01
 
 open Utility
 
-let folder (head :: tail) =
-    function
-    | "" -> 0 :: head :: tail
-    | line -> (int line + head) :: tail
+let folder (head :: tail) = function
+    | ""    -> 0 :: head :: tail
+    | line  -> (int line + head) :: tail
 
 let part1: string seq -> int = Seq.fold folder [ 0 ] >> Seq.max
 
-let part2: string seq -> int =
-    Seq.fold folder [ 0 ] >> Seq.sortDescending >> Seq.take 3 >> Seq.sum
+let part2: string seq -> int = Seq.fold folder [ 0 ] >> Seq.sortDescending >> Seq.take 3 >> Seq.sum
 
 let solution = Solution.build (part1, part2)
 (* 
