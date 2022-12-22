@@ -2,31 +2,19 @@ module Day10
 
 open Utility
 
-let parse =
-    function
+let parse = function
     | "noop" -> Seq.singleton 0
     | addx -> addx |> splitByChars [| ' ' |] |> Seq.last |> (fun n -> Seq.ofList [ 0; int n ])
 
 let enumerate = Seq.collect parse >> Seq.scan (+) 1 >> Seq.indexed
 
-let part1: string seq -> int =
-    enumerate
-    >> Seq.map (tupleMap inc id)
-    >> Seq.filter (fst >> fun idx -> (idx % 40) = 20 && idx <= 220)
-    >> Seq.sumBy (unpack (*))
+let part1 = enumerate >> Seq.map (tupleMap inc id) >> Seq.filter (fst >> fun idx -> (idx % 40) = 20 && idx <= 220) >> Seq.sumBy (unpack (*))
 
-let pixelate =
-    function
+let pixelate = function
     | idx, middle when Seq.exists ((=) (idx % 40)) [ dec middle; middle; inc middle ] -> "#"
     | _ -> "."
 
-let part2: string seq -> string =
-    enumerate
-    >> Seq.map pixelate
-    >> Seq.chunkBySize 40
-    >> Seq.truncate 6
-    >> Seq.map (String.concat "")
-    >> String.concat "\n"
+let part2 = enumerate >> Seq.map pixelate >> Seq.chunkBySize 40 >> Seq.truncate 6 >> Seq.map (String.concat "") >> String.concat "\n"
 
 let solution = Solution.build (part1, part2)
 
