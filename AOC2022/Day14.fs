@@ -24,7 +24,7 @@ let mutable depthLimit = Unchecked.defaultof<int>
 let goesAbyssal (x, y) =
     isnt (Set.exists (fun (x2, y2) -> y2 >= y && x = x2))
 
-let advanceSand cavern (x, y) =
+let advanceGrain cavern (x, y) =
     [ (x, inc y); (dec x, inc y); (inc x, inc y) ]
     |> List.tryFind (isnt (flip Set.contains cavern))
     |> Option.defaultValue (x, y)
@@ -32,27 +32,27 @@ let advanceSand cavern (x, y) =
 let rec dropGrain cavern =
     function
     | [] -> Complete, cavern, []
-    | next :: rest when goesAbyssal next cavern -> abyssCondition, abyssalTransform (cavern, next), rest
-    | next :: rest when advanceSand cavern next = next -> Incomplete, Set.add next cavern, rest
-    | next :: rest -> dropGrain cavern (advanceSand cavern next :: next :: rest)
+    | latest :: priors when goesAbyssal latest cavern -> abyssCondition, abyssalTransform (cavern, latest), priors
+    | latest :: priors when advanceGrain cavern latest = latest -> Incomplete, Set.add latest cavern, priors
+    | latest :: priors -> dropGrain cavern (advanceGrain cavern latest :: latest :: priors)
 
-let rec count grains =
+let rec count grainCount =
     function
-    | Complete, cavern, previous -> grains, (Incomplete, cavern, previous)
-    | Incomplete, cavern, previous -> count (inc grains) (dropGrain cavern previous)
+    | Complete, cavern, sandPath -> grainCount, (Incomplete, cavern, sandPath)
+    | Incomplete, cavern, sandPath -> count (inc grainCount) (dropGrain cavern sandPath)
 
 let parseAndPass =
     Seq.choose (runParser pL)
     >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread))
     >> set
-    >> fun s -> Incomplete, s, [ (500, 0) ]
+    >> fun cavern -> Incomplete, cavern, [ (500, 0) ]
     >> count -1
 
 let part1 = parseAndPass >> fst
 
-let actions (_, (_, s, _)) =
-    depthLimit <- s |> Seq.maxBy snd |> snd |> ((+) 1)
-    abyssalTransform <- fun (cavern, sand) -> Set.add (fst sand, depthLimit) cavern
+let actions (_, (_, cavern, _)) =
+    depthLimit <- (Seq.maxBy snd >> snd >> (+) 1) cavern
+    abyssalTransform <- fun (cavern, grain) -> Set.add (fst grain, depthLimit) cavern
     abyssCondition <- Incomplete
 
 let part2 = parseAndPass >> withEffect actions >> unpack count >> fst >> flip (-) 1
