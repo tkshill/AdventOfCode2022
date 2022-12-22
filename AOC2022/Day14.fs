@@ -2,11 +2,8 @@ module Day14
 
 open FParsec
 open FParsec.Pipes
-open Utility
 
-type SandFall =
-    | Complete
-    | Incomplete
+type SandFall = Complete | Incomplete
 
 let pT = %% +.pint32 -- ',' -- +.pint32 -%> auto
 
@@ -17,36 +14,29 @@ let spread (x, y) =
     | x2, _ when x <> x2 -> seq { for i in min x x2 .. max x x2 -> (i, y) }
     | _, y2 when y <> y2 -> seq { for i in min y y2 .. max y y2 -> (x, i) }
 
-let mutable abyssalTransform = fst
-let mutable abyssCondition = Complete
-let mutable depthLimit = Unchecked.defaultof<int>
+let mutable abyssalTransform, abyssCondition, depthLimit = fst, Complete, Unchecked.defaultof<int>
 
-let goesAbyssal (x, y) =
-    isnt (Set.exists (fun (x2, y2) -> y2 >= y && x = x2))
+let goesAbyssal (x, y) = isnt (Set.exists (fun (x2, y2) -> y2 >= y && x = x2))
 
 let advanceGrain cavern (x, y) =
     [ (x, inc y); (dec x, inc y); (inc x, inc y) ]
     |> List.tryFind (isnt (flip Set.contains cavern))
     |> Option.defaultValue (x, y)
 
-let rec dropGrain cavern =
-    function
-    | [] -> Complete, cavern, []
-    | latest :: priors when goesAbyssal latest cavern -> abyssCondition, abyssalTransform (cavern, latest), priors
+let rec dropGrain cavern = function
+    | []                                                        -> Complete, cavern, []
+    | latest :: priors when goesAbyssal latest cavern           -> abyssCondition, abyssalTransform (cavern, latest), priors
     | latest :: priors when advanceGrain cavern latest = latest -> Incomplete, Set.add latest cavern, priors
-    | latest :: priors -> dropGrain cavern (advanceGrain cavern latest :: latest :: priors)
+    | latest :: priors                                          -> dropGrain cavern (advanceGrain cavern latest :: latest :: priors)
 
-let rec count grainCount =
-    function
+let rec count grainCount = function
     | Complete, cavern, sandPath -> grainCount, (Incomplete, cavern, sandPath)
     | Incomplete, cavern, sandPath -> count (inc grainCount) (dropGrain cavern sandPath)
 
 let parseAndPass =
     Seq.choose (runParser pL)
-    >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread))
-    >> set
-    >> fun cavern -> Incomplete, cavern, [ (500, 0) ]
-    >> count -1
+    >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread)) >> set
+    >> fun cavern -> count -1 (Incomplete, cavern, [ (500, 0) ])
 
 let part1 = parseAndPass >> fst
 
