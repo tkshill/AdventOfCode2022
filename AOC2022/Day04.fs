@@ -7,18 +7,17 @@ let spreader f = tupleMap f f
 
 let stringToPairs = chunk [| ',' |] >> spreader (chunk [| '-' |] >> spreader int)
 
-let isSubset =
-    function
-    | (l, r), (l2, r2) when l2 >= l && r2 <= r -> 1
-    | (l, r), (l2, r2) when l2 <= l && r2 >= r -> 1
-    | _ -> 0
+let isSubset = function
+    | (l, r), (l2, r2) when l2 >= l && r2 <= r  -> 1
+    | (l, r), (l2, r2) when l2 <= l && r2 >= r  -> 1
+    | _                                         -> 0
 
 let part1 = Seq.sumBy (stringToPairs >> isSubset)
 
 let isOverlap ((l, r), (l2, r2)) =
     match Set.intersect (set { l..r }) (set { l2..r2 }) with
-    | x when x = Set.empty -> 0
-    | _ -> 1
+    | x when x = Set.empty  -> 0
+    | _                     -> 1
 
 let part2 = Seq.sumBy (stringToPairs >> isOverlap)
 
