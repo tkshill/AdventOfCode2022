@@ -67,12 +67,10 @@ let solve cycles worryOp =
 
 let worryOp1 _ = flip (/) 3L
 
-let part1: string array -> int64 = solve 20 worryOp1
+let part1 = solve 20 worryOp1
 
 let worryOp2 = values >> Seq.map Monkey.factor >> Seq.reduce (*) >> flip (%)
 
-let part2: string array -> int64 = solve 10000 worryOp2
+let part2 = solve 10000 worryOp2
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)

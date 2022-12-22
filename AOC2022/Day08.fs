@@ -27,9 +27,7 @@ let part2 input =
     let grid = array2D input
     grid |> Array2D.mapi (scenicScore grid) |> seqFrom2D |> Seq.max
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
     --- Day 8: Treetop Tree House ---

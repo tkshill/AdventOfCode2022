@@ -43,9 +43,7 @@ let part1: string seq -> int = solve 1
 
 let part2: string seq -> int = solve 9
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
     --- Day 9: Rope Bridge ---

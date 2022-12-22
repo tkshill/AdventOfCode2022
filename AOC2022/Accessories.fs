@@ -5,8 +5,23 @@ open FParsec
 open FParsec.Pipes
 open FSharpx.Collections
 
-type Solution = { Part1: string; Part2: string }
-type SolutionBuilder = string seq -> Solution
+let flip f a b = f b a
+
+type Part = (string[]) -> string
+
+let dummyPart: Part = fun _ -> failwith "Not implemented yet"
+
+type Solution(input: string[], firstPart: Part, secondPart: Part) =
+    let part1 = firstPart
+    let part2 = secondPart
+    let data = input
+    member this.Part1(?input) = defaultArg input data |> part1
+    member this.Part2(?input) = defaultArg input data |> part2
+
+    static member build(?firstPart, ?secondPart) =
+        let part1 = firstPart |> Option.map (flip (>>) string) |> flip defaultArg dummyPart
+        let part2 = secondPart |> Option.map (flip (>>) string) |> flip defaultArg dummyPart
+        fun input -> Solution(input, part1, part2)
 
 type MaybeBuilder() =
     member this.Bind(x, f) =
@@ -14,14 +29,9 @@ type MaybeBuilder() =
         | Some x -> f x
         | _ -> None
 
-    member this.Delay(f) = f ()
-    member this.Return(x) = Some x
-    member this.ReturnFrom(m) = m
     member this.Zero() = None
 
 let maybe = new MaybeBuilder()
-
-let flip f a b = f b a
 
 let next s value =
     let index = Seq.findIndex (fun v -> v = value) s
@@ -114,3 +124,5 @@ let withEffect (f: 'a -> unit) (v: 'a) =
     v
 
 let toTuple a b = a, b
+
+let trd (_, _, z) = z

@@ -28,9 +28,7 @@ let part2: string seq -> string =
     >> Seq.map (String.concat "")
     >> String.concat "\n"
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
 

@@ -9,7 +9,7 @@ let solution =
     | _ -> failwith "Input cannot be found"
 
 [<Fact>]
-let ``Part 1`` () = Assert.Equal("13140", solution.Part1)
+let ``Part 1`` () = Assert.Equal("13140", solution.Part1())
 
 
 let part2result =
@@ -22,4 +22,4 @@ let part2result =
 
 [<Fact>]
 let ``Part 2`` () =
-    Assert.Equal(part2result, solution.Part2)
+    Assert.Equal(part2result, solution.Part2())

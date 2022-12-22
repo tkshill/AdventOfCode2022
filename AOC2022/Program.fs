@@ -26,11 +26,11 @@ let main args =
         let! solution = getSolution input day
 
         match part with
-        | "1" -> printfn "%A" solution.Part1
-        | "2" -> printfn "%A" solution.Part2
+        | "1" -> printfn "%A" (solution.Part1())
+        | "2" -> printfn "%A" (solution.Part2())
         | _ ->
-            printfn "%A" solution.Part1
-            printfn "%A" solution.Part2
+            printfn "%A" (solution.Part1())
+            printfn "%A" (solution.Part2())
     }
     |> ignore
 

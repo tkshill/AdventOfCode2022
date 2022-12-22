@@ -20,10 +20,10 @@ let solution =
 [<InlineData("11-94,93-98", "0")>]
 [<InlineData("40-92,3-91", "0")>]
 let ``Part 1 tests for individual lines`` (data, expected) =
-    Assert.Equal(expected, Day04.part1 (Seq.singleton data))
+    Assert.Equal(expected, Day04.part1 (Array.singleton data))
 
 [<Fact>]
-let ``Part 1`` () = Assert.Equal("2", solution.Part1)
+let ``Part 1`` () = Assert.Equal("2", solution.Part1())
 
 [<Theory>]
 [<InlineData("2-4,6-8", false)>]
@@ -36,4 +36,4 @@ let ``Part 2 tests for individual lines`` (data, expected) =
     Assert.Equal(expected, Day04.isOverlap (Day04.stringToPairs data))
 
 [<Fact>]
-let ``Part 2`` () = Assert.Equal("4", solution.Part2)
+let ``Part 2`` () = Assert.Equal("4", solution.Part2())

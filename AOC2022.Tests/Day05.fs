@@ -9,7 +9,7 @@ let solution =
     | _ -> failwith "Input cannot be found"
 
 [<Fact>]
-let ``Part 1`` () = Assert.Equal("CMZ", solution.Part1)
+let ``Part 1`` () = Assert.Equal("CMZ", solution.Part1())
 
 [<Fact>]
-let ``Part 2`` () = Assert.Equal("MCD", solution.Part2)
+let ``Part 2`` () = Assert.Equal("MCD", solution.Part2())

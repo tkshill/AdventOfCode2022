@@ -13,9 +13,7 @@ let part1 = Seq.sumBy (Seq.splitInto 2 >> Seq.map set >> calculate)
 
 let part2 = Seq.chunkBySize 3 >> Seq.sumBy (Seq.map set >> calculate)
 
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
     --- Day 3: Rucksack Reorganization ---

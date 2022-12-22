@@ -50,9 +50,7 @@ let toPlays2 (opponentChar, playerChar) =
 
 let part2: string seq -> int = Seq.sumBy (seqToTuple >> toPlays2 >> score)
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
     --- Day 2: Rock Paper Scissors ---

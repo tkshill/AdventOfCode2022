@@ -4,54 +4,57 @@ open FParsec
 open FParsec.Pipes
 open Utility
 
+type SandFall =
+    | Complete
+    | Incomplete
+
 let pT = %% +.pint32 -- ',' -- +.pint32 -%> auto
 
-let pL: Parser<(int32 * int32) seq, unit> = %% +.(pT * (qty[0..] / " -> ")) -|> seq
+let pL: Parser<(int * int) seq, unit> = %% +.(pT * (qty[0..] / " -> ")) -|> seq
 
-let pointsToPath (x, y) =
+let spread (x, y) =
     function
     | x2, _ when x <> x2 -> seq { for i in min x x2 .. max x x2 -> (i, y) }
     | _, y2 when y <> y2 -> seq { for i in min y y2 .. max y y2 -> (x, i) }
 
 let mutable abyssalTransform = fst
-let mutable abyssalClause = true
+let mutable abyssCondition = Complete
 let mutable depthLimit = Unchecked.defaultof<int>
 
 let goesAbyssal (x, y) =
     isnt (Set.exists (fun (x2, y2) -> y2 >= y && x = x2))
 
-let moment cavern (x, y) =
+let advanceSand cavern (x, y) =
     [ (x, inc y); (dec x, inc y); (inc x, inc y) ]
     |> List.tryFind (isnt (flip Set.contains cavern))
     |> Option.defaultValue (x, y)
 
 let rec dropGrain cavern =
     function
-    | _ when Set.contains (500, 0) cavern -> true, cavern
-    | sand when goesAbyssal sand cavern -> abyssalClause, abyssalTransform (cavern, sand)
-    | sand when moment cavern sand = sand -> false, Set.add (log id sand) cavern
-    | sand -> dropGrain cavern (moment cavern sand)
+    | [] -> Complete, cavern, []
+    | next :: rest when goesAbyssal next cavern -> abyssCondition, abyssalTransform (cavern, next), rest
+    | next :: rest when advanceSand cavern next = next -> Incomplete, Set.add next cavern, rest
+    | next :: rest -> dropGrain cavern (advanceSand cavern next :: next :: rest)
 
-let rec count n =
+let rec count grains =
     function
-    | true, cavern -> n, (false, cavern)
-    | false, cavern -> count (inc n) (dropGrain cavern (500, 0))
+    | Complete, cavern, previous -> grains, (Incomplete, cavern, previous)
+    | Incomplete, cavern, previous -> count (inc grains) (dropGrain cavern previous)
 
-let parse =
+let parseAndPass =
     Seq.choose (runParser pL)
-    >> Seq.collect (Seq.pairwise >> Seq.collect (unpack pointsToPath))
+    >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread))
     >> set
-    >> toTuple false
+    >> fun s -> Incomplete, s, [ (500, 0) ]
+    >> count 0
 
-let part1: string seq -> int = parse >> count -1 >> fst
+let part1 = parseAndPass >> fst >> flip (-) 1
 
-let actions (s: int * (bool * Set<int * int>)) =
-    depthLimit <- s |> snd |> snd |> seq |> Seq.maxBy snd |> snd |> ((+) 1)
-    abyssalTransform <- fun (cavern, sand) -> Set.add (log id (fst sand, depthLimit)) cavern
-    abyssalClause <- false
+let actions (_, (_, s, _)) =
+    depthLimit <- s |> Seq.maxBy snd |> snd |> ((+) 1)
+    abyssalTransform <- fun (cavern, sand) -> Set.add (fst sand, depthLimit) cavern
+    abyssCondition <- Incomplete
 
-let part2: string seq -> int = parse >> count -1 >> fst // withEffect actions >> unpack count >> fst >> (flip (-) 1)
+let part2 = parseAndPass >> withEffect actions >> unpack count >> fst
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)

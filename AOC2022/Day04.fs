@@ -22,9 +22,7 @@ let isOverlap ((l, r), (l2, r2)) =
 
 let part2 = Seq.sumBy (stringToPairs >> isOverlap)
 
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
     --- Day 4: Camp Cleanup ---

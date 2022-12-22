@@ -48,9 +48,7 @@ let part1 = solve Array.rev
 
 let part2 = solve id
 
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
     --- Day 5: Supply Stacks ---

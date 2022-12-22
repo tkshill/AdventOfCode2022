@@ -12,10 +12,7 @@ let part1: string seq -> int = Seq.fold folder [ 0 ] >> Seq.max
 let part2: string seq -> int =
     Seq.fold folder [ 0 ] >> Seq.sortDescending >> Seq.take 3 >> Seq.sum
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
-
+let solution = Solution.build (part1, part2)
 (* 
     --- Day 1: Calorie Counting ---
     Santa's reindeer typically eat regular reindeer food, but they need a lot of magical energy to deliver presents on Christmas. For that, their favorite snack is a special type of star fruit that only grows deep in the jungle. The Elves have brought you on their annual expedition to the grove where the fruit grows.

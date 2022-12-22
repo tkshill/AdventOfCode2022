@@ -15,7 +15,7 @@ let solution =
 [<InlineData("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "10")>]
 [<InlineData("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", "11")>]
 let ``Part 1`` (input, expected) =
-    Assert.Equal(expected, Day06.part1 (Seq.singleton input))
+    Assert.Equal(expected, Day06.part1 (Array.singleton input))
 
 // [<Fact>]
 [<Theory>]
@@ -25,4 +25,4 @@ let ``Part 1`` (input, expected) =
 [<InlineData("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "29")>]
 [<InlineData("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", "26")>]
 let ``Part 2`` (input, expected) =
-    Assert.Equal(expected, Day06.part2 (Seq.singleton input))
+    Assert.Equal(expected, Day06.part2 (Array.singleton input))

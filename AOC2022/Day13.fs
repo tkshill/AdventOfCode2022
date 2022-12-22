@@ -30,7 +30,7 @@ let rec plumb (L left) (L right) =
 
 let parse = Seq.choose ((run lParser) >> parserResultToOption)
 
-let part1: string seq -> int =
+let part1 =
     parse
     >> Seq.chunkBySize 2
     >> indexWithOffset 1
@@ -39,7 +39,7 @@ let part1: string seq -> int =
 
 let additions = parse [| "[[2]]"; "[[6]]" |]
 
-let part2: string array -> int =
+let part2 =
     parse
     >> Seq.append additions
     >> Seq.sortWith plumb
@@ -48,6 +48,4 @@ let part2: string array -> int =
     >> Seq.map fst
     >> Seq.reduce (*)
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)

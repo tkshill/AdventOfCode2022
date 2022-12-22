@@ -80,9 +80,7 @@ let part2 input =
 
     directorySizes |> List.filter ((<=) (total - 40000000)) |> List.min
 
-let solution input =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
     --- Day 7: No Space Left On Device ---

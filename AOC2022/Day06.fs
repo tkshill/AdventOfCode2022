@@ -13,9 +13,7 @@ let part1 = Seq.head >> Seq.toList >> counter 4 0 List.Empty
 
 let part2 = Seq.head >> Seq.toList >> counter 14 0 List.Empty
 
-let solution (input: string seq) =
-    { Part1 = part1 input |> string
-      Part2 = part2 input |> string }
+let solution = Solution.build (part1, part2)
 
 (*
   --- Day 6: Tuning Trouble ---
