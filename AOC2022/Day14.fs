@@ -33,7 +33,7 @@ let rec count grainCount = function
     | Incomplete, cavern, sandPath  -> count (inc grainCount) (dropGrain cavern sandPath)
 
 let parseAndPass =
-    Seq.choose (runParser pL)
+    runParser pL
     >> Seq.collect (Seq.pairwise >> Seq.collect (unpack spread))
     >> fun cavern -> count -1 (Incomplete, set cavern, [ (500, 0) ])
 

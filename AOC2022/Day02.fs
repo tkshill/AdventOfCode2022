@@ -2,28 +2,46 @@ module Day02
 
 open Utility
 
-type Play = Rock | Paper | Scissors
+type Play =
+    | Rock
+    | Paper
+    | Scissors
 
 let plays = [ Rock; Scissors; Paper ]
 
 type Play with
-    member this.beats play = if next plays this = play then true else false
 
-let points = function | Rock -> 1 | Paper -> 2 | Scissors -> 3
+    member this.beats play =
+        if infiniteNext plays this = play then true else false
 
-let toPlay = function | 'A' | 'X' -> Rock | 'B' | 'Y' -> Paper | 'C' | 'Z' -> Scissors
+let points =
+    function
+    | Rock -> 1
+    | Paper -> 2
+    | Scissors -> 3
 
-let score: ((Play * Play) -> int) = function
+let toPlay =
+    function
+    | 'A'
+    | 'X' -> Rock
+    | 'B'
+    | 'Y' -> Paper
+    | 'C'
+    | 'Z' -> Scissors
+
+let score: ((Play * Play) -> int) =
+    function
     | (opponent, player) when player.beats opponent -> 6 + points player
-    | (opponent, player) when opponent = player     -> 3 + points player
-    | (_, player)                                   -> points player
+    | (opponent, player) when opponent = player -> 3 + points player
+    | (_, player) -> points player
 
 let part1 = Seq.sumBy (seqToTuple >> (tupleMap toPlay toPlay) >> score)
 
-let actionToPlay play = function
-    | 'X' -> play |> next plays
+let actionToPlay play =
+    function
+    | 'X' -> play |> infiniteNext plays
     | 'Y' -> play
-    | 'Z' -> play |> next plays |> next plays
+    | 'Z' -> play |> infiniteNext plays |> infiniteNext plays
 
 let toPlays2 (opponentChar, playerChar) =
     let opponentPlay = toPlay opponentChar
