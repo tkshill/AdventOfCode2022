@@ -1,7 +1,6 @@
 module Day14Tests
 
 open Xunit
-open Utility
 
 let solution =
     match getInput 14 with
