@@ -18,7 +18,7 @@ module TupleHelpers =
 
     let trd (_, _, z) = z
 
-    let tupleFold f f2 (a, b) = a |> f |> flip f2 b
+    let tupleFold f f2 (a, b) = f a, f2 (f a ) b
 
     let seqToTuple sequence = (Seq.head sequence, Seq.last sequence)
 
