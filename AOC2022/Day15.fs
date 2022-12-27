@@ -6,12 +6,11 @@ let pL = %% "Sensor at x=" -- +.(pT ", y=") -- ": closest beacon is at x=" -- +.
 
 let manhattanDistance (x0, y0) (x1, y1) = abs (x0 - x1) + abs (y0 - y1)
 
-let rec solve yLine (beacons, sensorSpans) ((xSensor, ySensor),(xBeacon, yBeacon)) =
+let rec solve yLine (beaconsOnLine, sensorSpans) ((xSensor, ySensor),(xBeacon, yBeacon)) =
     let xSpan = manhattanDistance (xSensor, ySensor) (xBeacon, yBeacon) - abs (yLine - ySensor)
-    let sensorSpan = [ (xSensor - xSpan)..(xSensor + xSpan) ]
-    (if yBeacon = yLine then [xBeacon] else []) @ beacons, sensorSpan @ sensorSpans
+    (if yBeacon = yLine then [xBeacon] else []) @ beaconsOnLine, [ (xSensor - xSpan)..(xSensor + xSpan) ] @ sensorSpans
 
-let part1 y = runParser pL >> Seq.fold (solve y) ([], []) >> unpack List.except >> List.length
+let part1 yLine = runParser pL >> Seq.fold (solve yLine) ([], []) >> unpack List.except >> List.length
 
 let manhattanEdges limit ((x, y), md) =
     let withinLimit v = v >= 0 && v <= limit
