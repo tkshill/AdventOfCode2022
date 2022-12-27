@@ -13,19 +13,18 @@ let rec solve yLine (beacons, sensorSpans) ((xSensor, ySensor),(xBeacon, yBeacon
 
 let part1 y = runParser pL >> Seq.fold (solve y) ([], []) >> unpack List.except >> List.length
 
-let withinLimit limit v = v >= 0 && v <= limit
-
 let manhattanEdges limit ((x, y), md) =
+    let withinLimit v = v >= 0 && v <= limit
     seq { for i in x - md..x + md ->
             match i, y + md - abs (i - x), y - (md - abs (i - x)) with
-            | i, _, _ when not (withinLimit limit i) -> []
-            | i, y0, y1 when y0 <> y1 && withinLimit limit y0 && withinLimit limit y1 -> [(i, y0); (i, y1)]
-            | i, y0, _ when withinLimit limit y0 -> [(i, y0)]
-            | i, _, y1 when withinLimit limit y1 -> [(i, y1)] } |> List.concat
+            | i, _, _ when not (withinLimit i) -> []
+            | i, y0, y1 when y0 <> y1 && withinLimit y0 && withinLimit y1 -> [(i, y0); (i, y1)]
+            | i, y0, _ when withinLimit y0 -> [(i, y0)]
+            | i, _, y1 when withinLimit y1 -> [(i, y1)] } |> List.concat
 
-let solve2 limit (input) = 
-    Seq.collect ((tupleMap id ((+) 1)) >> manhattanEdges limit) input
-    |> Seq.find (fun unReachable -> Seq.forall (fun (beacon, md) -> manhattanDistance beacon unReachable > md) input)
+let solve2 limit (beaconsAndMDs) = 
+    Seq.collect ((tupleMap id ((+) 1)) >> manhattanEdges limit) beaconsAndMDs
+    |> Seq.find (fun unReachable -> Seq.forall (fun (beacon, md) -> manhattanDistance beacon unReachable > md) beaconsAndMDs)
 
 let part2 limit = runParser pL >> Seq.map (tupleFold id manhattanDistance) >> solve2 limit >> tupleMap int64 int64 >> tupleFold ((*) 4000000L) (+) >> snd
 
