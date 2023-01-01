@@ -10,6 +10,8 @@ open FSharpx.Collections
 module TupleHelpers =
     let unpack f (a, b) = f a b
 
+    let unpack2 f (a, b, c) = f a b c
+
     let pack f a b = f (a, b)
 
     let tupleMap f f2 (a, b) = (f a, f2 b)
@@ -25,6 +27,7 @@ module TupleHelpers =
 [<AutoOpen>]
 module Potpourri =
     let flip f a b = f b a
+    let flip2 f a b c = f c a b
 
     let boolToInt b = if b then 1 else 0
 
@@ -41,6 +44,8 @@ module Potpourri =
     let splitByChars (chars) (s: string) = s.Split(chars)
 
     let splitByString (str: string) (s: string) = s.Split(str)
+
+    let toString (n: char array) = new System.String(n)
 
 [<AutoOpen>]
 module Solution =

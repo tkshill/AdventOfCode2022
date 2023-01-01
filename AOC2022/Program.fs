@@ -16,6 +16,7 @@ let getSolution input : string -> Solution option =
     | "13" -> Some(Day13.solution input)
     | "14" -> Some(Day14.solution input)
     | "15" -> Some(Day15.solution input)
+    | "16" -> Some(Day16.solution input)
     | _ -> None
 
 [<EntryPoint>]

@@ -2,7 +2,8 @@ module Day07
 
 open Utility
 
-let (|Prefix|_|) (p: string) (s: string) = match s.StartsWith(p) with
+let (|Prefix|_|) (p: string) (s: string) =
+    match s.StartsWith(p) with
     | true  -> Some(s.Substring(p.Length))
     | false -> None
 
@@ -30,7 +31,8 @@ let rec build (dir: Directory) = function
     | MakeFile(size, name)              -> advance { dir with Items = (File { Name = name; Size = size } :: dir.Items) }
     | MakeDirectory name                -> advance { dir with Items = (Directory(advance { Name = name; Items = List.Empty })) :: dir.Items }
 
-and advance dir = match commands with
+and advance dir =
+    match commands with
     | []            -> dir
     | head :: tail  -> commands <- tail; build dir head
 

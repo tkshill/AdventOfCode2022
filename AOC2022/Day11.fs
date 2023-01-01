@@ -28,7 +28,8 @@ let parseLine (chunk: string[]) =
       IfFalse = chunk[5] |> splitByChars [| ' ' |] |> Array.last |> int
       Inspections = 0L }
 
-let calculateWorry (worryOp: MonkeyTracker -> int64 -> int64) (d: MonkeyTracker) k l = match (d[k].Op, d[k].Const) with
+let calculateWorry (worryOp: MonkeyTracker -> int64 -> int64) (d: MonkeyTracker) k l = 
+    match (d[k].Op, d[k].Const) with
     | '*', Some v -> (worryOp d) (l * v)
     | '+', Some v -> (worryOp d) (l + v)
     | _ -> (worryOp d) (l * l)

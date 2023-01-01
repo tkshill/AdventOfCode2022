@@ -15,7 +15,8 @@ let lParser: Parser<Nested, unit> = %% '[' -- +.(nested * (qty[0..] / ',')) -- '
 
 do nestedRef := %[ nParser; lParser ]
 
-let rec plumb (L left) (L right) = match (left, right) with
+let rec plumb (L left) (L right) = 
+    match (left, right) with
     | [], _ -> -1
     | _, [] -> 1
     | N num :: _, N num2 :: _ when num <> num2 -> compare num num2
