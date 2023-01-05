@@ -47,13 +47,12 @@ module Potpourri =
 
     let toString (n: char array) = new System.String(n)
 
-[<AutoOpen>]
 module Solution =
     type Part = (string[]) -> string
 
     let dummyPart: Part = fun _ -> failwith "Not implemented yet"
 
-type Solution(input: string[], firstPart: Part, secondPart: Part) =
+type Solution(input: string[], firstPart: Solution.Part, secondPart: Solution.Part) =
     let part1 = firstPart
     let part2 = secondPart
     let data = input
@@ -61,8 +60,8 @@ type Solution(input: string[], firstPart: Part, secondPart: Part) =
     member this.Part2(?input) = defaultArg input data |> part2
 
     static member build(?firstPart, ?secondPart) =
-        let part1 = firstPart |> Option.map (flip (>>) string) |> flip defaultArg dummyPart
-        let part2 = secondPart |> Option.map (flip (>>) string) |> flip defaultArg dummyPart
+        let part1 = firstPart |> Option.map (flip (>>) string) |> flip defaultArg Solution.dummyPart
+        let part2 = secondPart |> Option.map (flip (>>) string) |> flip defaultArg Solution.dummyPart
         fun input -> Solution(input, part1, part2)
 
 type MaybeBuilder() =
@@ -141,3 +140,11 @@ module Parser =
 
     let runParser parser =
         Seq.choose (run parser >> parserResultToOption)
+
+let duration f =
+    let timer = new System.Diagnostics.Stopwatch()
+    timer.Start()
+    let returnValue = f()
+    timer.Stop()
+    printfn $"Value: {returnValue}\nElapsed Time: {timer.ElapsedMilliseconds} milliseconds"
+    returnValue

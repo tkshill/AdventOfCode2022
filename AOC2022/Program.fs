@@ -13,6 +13,7 @@ let getSolution input : string -> Solution option =
     | "9" -> Some(Day09.solution input)
     | "10" -> Some(Day10.solution input)
     | "11" -> Some(Day11.solution input)
+    | "12" -> Some(Day12.solution input)
     | "13" -> Some(Day13.solution input)
     | "14" -> Some(Day14.solution input)
     | "15" -> Some(Day15.solution input)
@@ -28,12 +29,10 @@ let main args =
         let! solution = getSolution input day
 
         match part with
-        | "1" -> printfn "%A" (solution.Part1())
-        | "2" -> printfn "%A" (solution.Part2())
+        | "1" -> duration solution.Part1
+        | "2" -> duration solution.Part2
         | _ ->
-            printfn "%A" (solution.Part1())
-            printfn "%A" (solution.Part2())
-    }
-    |> ignore
+            duration (fun _ -> solution.Part1(), solution.Part2())
+    } |> ignore
 
     0
